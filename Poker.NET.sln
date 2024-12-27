@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FFFE2402-E823-43D9-AE1B-B7F65E386E00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.NET.Engine", "src\Poker.NET.Engine\Poker.NET.Engine.csproj", "{502AFF7B-5025-48CF-86BE-26A6280971B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +14,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{502AFF7B-5025-48CF-86BE-26A6280971B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{502AFF7B-5025-48CF-86BE-26A6280971B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{502AFF7B-5025-48CF-86BE-26A6280971B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{502AFF7B-5025-48CF-86BE-26A6280971B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{502AFF7B-5025-48CF-86BE-26A6280971B6} = {FFFE2402-E823-43D9-AE1B-B7F65E386E00}
 	EndGlobalSection
 EndGlobal
