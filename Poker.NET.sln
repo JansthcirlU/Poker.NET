@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{09294411
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.NET.Engine.Tests", "tests\Poker.NET.Engine.Tests\Poker.NET.Engine.Tests.csproj", "{83BD9594-A5DB-466D-8E64-B06546D5AF60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.NET.LookupGeneration", "src\Poker.NET.LookupGeneration\Poker.NET.LookupGeneration.csproj", "{8639E932-9C2C-4665-937D-5CF89A556CAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker.NET.LookupGeneration.Tests", "tests\Poker.NET.LookupGeneration.Tests\Poker.NET.LookupGeneration.Tests.csproj", "{E91CCD4F-DE17-4D3C-AC05-DCF91DE6A153}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,9 +32,19 @@ Global
 		{83BD9594-A5DB-466D-8E64-B06546D5AF60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83BD9594-A5DB-466D-8E64-B06546D5AF60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83BD9594-A5DB-466D-8E64-B06546D5AF60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8639E932-9C2C-4665-937D-5CF89A556CAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8639E932-9C2C-4665-937D-5CF89A556CAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8639E932-9C2C-4665-937D-5CF89A556CAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8639E932-9C2C-4665-937D-5CF89A556CAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E91CCD4F-DE17-4D3C-AC05-DCF91DE6A153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E91CCD4F-DE17-4D3C-AC05-DCF91DE6A153}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E91CCD4F-DE17-4D3C-AC05-DCF91DE6A153}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E91CCD4F-DE17-4D3C-AC05-DCF91DE6A153}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{502AFF7B-5025-48CF-86BE-26A6280971B6} = {FFFE2402-E823-43D9-AE1B-B7F65E386E00}
 		{83BD9594-A5DB-466D-8E64-B06546D5AF60} = {09294411-21EF-4892-9485-C21059218B3A}
+		{8639E932-9C2C-4665-937D-5CF89A556CAB} = {FFFE2402-E823-43D9-AE1B-B7F65E386E00}
+		{E91CCD4F-DE17-4D3C-AC05-DCF91DE6A153} = {09294411-21EF-4892-9485-C21059218B3A}
 	EndGlobalSection
 EndGlobal
