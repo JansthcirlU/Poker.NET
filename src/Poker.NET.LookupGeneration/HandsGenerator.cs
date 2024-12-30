@@ -90,51 +90,70 @@ public static class HandsGenerator
 
     public static IEnumerable<Cards> GetAllStraights()
     {
+        List<Cards> suits = GetAllSuits().ToList();
         List<Cards> ranks = GetAllRanks().ToList();
         List<Cards> straightFlushes = GetAllStraightFlushes().ToList();
         
-        // For each possible starting rank (goes up to Ten for Ten-to-Ace straight)
-        for (int i = 0; i < 10; i++)
+        // Generate ace-low straights (A-2-3-4-5)
+        foreach (Cards ace in GetCombinations(Cards.Aces, 1))
         {
-            // Get all possible combinations of one card from each rank in sequence
-            List<Cards> rankSequence = Enumerable.Range(0, 5)
-                .Select(j => ranks[(i + j) % 13])
-                .ToList();
-
-            // Get all combinations of one card from each rank
-            List<IEnumerable<Cards>> combinations = rankSequence
-                .Select(rank => GetCombinations(rank, 1))
-                .ToList();
-
-            // Generate all possible combinations using these ranks
-            IEnumerable<Cards> result = combinations[0]
-                .SelectMany(c1 => combinations[1]
-                    .SelectMany(c2 => combinations[2]
-                        .SelectMany(c3 => combinations[3]
-                            .SelectMany(c4 => combinations[4]
-                                .Select(c5 => c1 | c2 | c3 | c4 | c5)))));
-
-            // Exclude straight flushes
-            foreach (Cards straight in result)
+            foreach (Cards two in GetCombinations(Cards.Twos, 1))
             {
-                if (!straightFlushes.Contains(straight))
+                foreach (Cards three in GetCombinations(Cards.Threes, 1))
                 {
-                    yield return straight;
+                    foreach (Cards four in GetCombinations(Cards.Fours, 1))
+                    {
+                        foreach (Cards five in GetCombinations(Cards.Fives, 1))
+                        {
+                            Cards straight = ace | two | three | four | five;
+                            if (straightFlushes.Contains(straight)) continue;
+                            
+                            yield return straight;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Generate remaining straights (2-3-4-5-6 through 10-J-Q-K-A)
+        for (int i = 0; i < 9; i++)  // Start with Two, end with Ten
+        {
+            List<IEnumerable<Cards>> cards = Enumerable.Range(0, 5)
+                .Select(j => GetCombinations(ranks[i + j], 1))
+                .ToList();
+
+            foreach (Cards c1 in cards[0])
+            {
+                foreach (Cards c2 in cards[1])
+                {
+                    foreach (Cards c3 in cards[2])
+                    {
+                        foreach (Cards c4 in cards[3])
+                        {
+                            foreach (Cards c5 in cards[4])
+                            {
+                                Cards straight = c1 | c2 | c3 | c4 | c5;
+                                if (straightFlushes.Contains(straight)) continue;
+                                
+                                yield return straight;
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-    
+
     public static IEnumerable<Cards> GetAllFlushes()
     {
         List<Cards> suits = GetAllSuits().ToList();
         List<Cards> straightFlushes = GetAllStraightFlushes().ToList();
-        
+
         foreach (Cards suit in suits)
         {
             // Get all 5-card combinations in this suit
             IEnumerable<Cards> flushCombinations = GetCombinations(suit, 5);
-            
+
             // Exclude straight flushes
             foreach (Cards flush in flushCombinations)
             {
@@ -180,20 +199,29 @@ public static class HandsGenerator
     public static IEnumerable<Cards> GetAllStraightFlushes()
     {
         List<Cards> suits = GetAllSuits().ToList();
-        List<Cards> ranks = GetAllRanks().ToList();
         
         // For each suit...
         foreach (Cards suit in suits)
         {
-            // For each starting rank (goes up to Ten for Ten-to-Ace straight)
-            for (int i = 0; i < 10; i++)
+            // Generate ace-low straight flush (A-2-3-4-5)
+            Cards[] aceLowCards =
+            [
+                Cards.Aces & suit,      // Ace
+                Cards.Twos & suit,      // Two
+                Cards.Threes & suit,    // Three
+                Cards.Fours & suit,     // Four
+                Cards.Fives & suit      // Five
+            ];
+            yield return aceLowCards.Aggregate((a, b) => a | b);
+
+            // Generate remaining straight flushes (2-3-4-5-6 through 10-J-Q-K-A)
+            List<Cards> ranks = GetAllRanks().ToList();
+            for (int i = 0; i < 9; i++)  // Start with Two, end with Ten
             {
-                // Build a 5-card sequence
                 Cards straightFlush = Cards.None;
                 for (int j = 0; j < 5; j++)
                 {
-                    // Get the cards of this rank in this suit
-                    Cards ranksInSuit = ranks[(i + j) % 13] & suit;
+                    Cards ranksInSuit = ranks[i + j] & suit;
                     straightFlush |= ranksInSuit;
                 }
                 yield return straightFlush;
