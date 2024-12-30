@@ -21,7 +21,7 @@ public class GeneratorTests
         List<Cards> allSevenCardHands = HandsGenerator.GetAllSevenCardHands().ToList();
 
         // Assert
-        int fiftyTwoChooseSeven = 133_784_560;
+        int fiftyTwoChooseSeven = Combinatorics.SevenCardHandsCount;
         Assert.Equal(fiftyTwoChooseSeven, allSevenCardHands.Count);
     }
 
@@ -32,7 +32,7 @@ public class GeneratorTests
         List<Cards> allRanks = HandsGenerator.GetAllRanks().ToList();
 
         // Assert
-        Assert.Equal(13, allRanks.Count);
+        Assert.Equal(Combinatorics.AllRanksCount, allRanks.Count);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class GeneratorTests
         List<Cards> allRanks = HandsGenerator.GetAllSuits().ToList();
 
         // Assert
-        Assert.Equal(4, allRanks.Count);
+        Assert.Equal(Combinatorics.AllSuitsCount, allRanks.Count);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class GeneratorTests
         List<Cards> allPairs = HandsGenerator.GetAllPairs().ToList();
 
         // Assert
-        Assert.Equal(78, allPairs.Count);
+        Assert.Equal(Combinatorics.AllPairsCount, allPairs.Count);
     }
 
     [Theory]
@@ -71,7 +71,7 @@ public class GeneratorTests
         List<Cards> allTwoPairs = HandsGenerator.GetAllTwoPairs().ToList();
 
         // Assert
-        Assert.Equal(2808, allTwoPairs.Count);
+        Assert.Equal(Combinatorics.AllTwoPairsCount, allTwoPairs.Count);
     }
 
     [Theory]
@@ -100,7 +100,7 @@ public class GeneratorTests
         List<Cards> allThreeOfAKind = HandsGenerator.GetAllThreeOfAKind().ToList();
 
         // Assert
-        Assert.Equal(52, allThreeOfAKind.Count);
+        Assert.Equal(Combinatorics.AllThreeOfAKindCount, allThreeOfAKind.Count);
     }
 
     [Theory]
@@ -119,7 +119,7 @@ public class GeneratorTests
         List<Cards> allStraights = HandsGenerator.GetAllStraights().ToList();
 
         // Assert
-        Assert.Equal(10_200, allStraights.Count);
+        Assert.Equal(Combinatorics.AllStraightsCount, allStraights.Count);
     }
 
     [Theory]
@@ -160,7 +160,7 @@ public class GeneratorTests
         List<Cards> allFlushes = HandsGenerator.GetAllFlushes().ToList();
 
         // Assert
-        Assert.Equal(5108, allFlushes.Count);
+        Assert.Equal(Combinatorics.AllFlushesCount, allFlushes.Count);
     }
 
     [Theory]
@@ -179,7 +179,7 @@ public class GeneratorTests
         List<Cards> allFullHouse = HandsGenerator.GetAllFullHouse().ToList();
 
         // Assert
-        Assert.Equal(3744, allFullHouse.Count);
+        Assert.Equal(Combinatorics.AllFullHouseCount, allFullHouse.Count);
     }
 
     [Theory]
@@ -211,7 +211,7 @@ public class GeneratorTests
         List<Cards> allFourOfAKind = HandsGenerator.GetAllFourOfAKind().ToList();
 
         // Assert
-        Assert.Equal(13, allFourOfAKind.Count);
+        Assert.Equal(Combinatorics.AllFourOfAKindCount, allFourOfAKind.Count);
     }
 
     [Theory]
@@ -230,7 +230,7 @@ public class GeneratorTests
         List<Cards> allStraightFlushes = HandsGenerator.GetAllStraightFlushes().ToList();
 
         // Assert
-        Assert.Equal(40, allStraightFlushes.Count);
+        Assert.Equal(Combinatorics.AllStraightFlushesCount, allStraightFlushes.Count);
     }
 
     [Theory]
