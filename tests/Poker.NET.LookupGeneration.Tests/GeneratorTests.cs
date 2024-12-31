@@ -26,6 +26,17 @@ public class GeneratorTests
     }
 
     [Fact]
+    public void AllHandsSanityCheck()
+    {
+        // Arrange
+        List<HoldemHand> firstNHands = HandsGenerator.GetAllHands()
+            .Take(100)
+            .ToList();
+        
+        Assert.NotEmpty(firstNHands);
+    }
+
+    [Fact]
     public void AllRanksSanityCheck()
     {
         // Arrange
