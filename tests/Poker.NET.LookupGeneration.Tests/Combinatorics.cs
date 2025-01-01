@@ -3,6 +3,7 @@ namespace Poker.NET.LookupGeneration.Tests;
 public static class Combinatorics
 {
     public const int SevenCardHandsCount = 133_784_560;
+    public const ulong AllHandsCount = 2_809_475_760;
     public const int AllRanksCount = 13;
     public const int AllSuitsCount = 4;
     public const int AllPairsCount = 78;

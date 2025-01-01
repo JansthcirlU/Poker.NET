@@ -18,52 +18,57 @@ public class GeneratorTests
     public void SanityCheck()
     {
         // Arrange
-        List<Cards> allSevenCardHands = HandsGenerator.GetAllSevenCardHands().ToList();
+        int allSevenCardHandsCount = HandsGenerator.GetAllSevenCardHands().Count();
 
         // Assert
-        int fiftyTwoChooseSeven = Combinatorics.SevenCardHandsCount;
-        Assert.Equal(fiftyTwoChooseSeven, allSevenCardHands.Count);
+        Assert.Equal(Combinatorics.SevenCardHandsCount, allSevenCardHandsCount);
     }
 
     [Fact]
     public void AllHandsSanityCheck()
     {
         // Arrange
-        List<HoldemHand> firstNHands = HandsGenerator.GetAllHands()
-            .Take(100)
-            .ToList();
+        ulong allHands = HandsGenerator.GetAllHands()
+            .Aggregate(0ul, (total, _) => total + 1); // Count() can only go up to int.MaxValue, which is not enough to hold this number
         
-        Assert.NotEmpty(firstNHands);
+        // Assert
+        Assert.Equal(Combinatorics.AllHandsCount, allHands);
     }
 
     [Fact]
     public void AllRanksSanityCheck()
     {
         // Arrange
-        List<Cards> allRanks = HandsGenerator.GetAllRanks().ToList();
+        int allRanksCount = HandsGenerator.GetAllRanks()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllRanksCount, allRanks.Count);
+        Assert.Equal(Combinatorics.AllRanksCount, allRanksCount);
     }
 
     [Fact]
     public void AllSuitsSanityCheck()
     {
         // Arrange
-        List<Cards> allRanks = HandsGenerator.GetAllSuits().ToList();
+        int allRanksCount = HandsGenerator.GetAllSuits()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllSuitsCount, allRanks.Count);
+        Assert.Equal(Combinatorics.AllSuitsCount, allRanksCount);
     }
 
     [Fact]
     public void AllPairsSanityCheck()
     {
         // Arrange
-        List<Cards> allPairs = HandsGenerator.GetAllPairs().ToList();
+        int allPairsCount = HandsGenerator.GetAllPairs()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllPairsCount, allPairs.Count);
+        Assert.Equal(Combinatorics.AllPairsCount, allPairsCount);
     }
 
     [Theory]
@@ -79,10 +84,12 @@ public class GeneratorTests
     public void AllTwoPairsSanityCheck()
     {
         // Arrange
-        List<Cards> allTwoPairs = HandsGenerator.GetAllTwoPairs().ToList();
+        int allTwoPairsCount = HandsGenerator.GetAllTwoPairs()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllTwoPairsCount, allTwoPairs.Count);
+        Assert.Equal(Combinatorics.AllTwoPairsCount, allTwoPairsCount);
     }
 
     [Theory]
@@ -108,10 +115,12 @@ public class GeneratorTests
     public void AllThreeOfAKindSanityCheck()
     {
         // Arrange
-        List<Cards> allThreeOfAKind = HandsGenerator.GetAllThreeOfAKind().ToList();
+        int allThreeOfAKindCount = HandsGenerator.GetAllThreeOfAKind()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllThreeOfAKindCount, allThreeOfAKind.Count);
+        Assert.Equal(Combinatorics.AllThreeOfAKindCount, allThreeOfAKindCount);
     }
 
     [Theory]
@@ -127,10 +136,12 @@ public class GeneratorTests
     public void AllStraightsSanityCheck()
     {
         // Arrange
-        List<Cards> allStraights = HandsGenerator.GetAllStraights().ToList();
+        int allStraightsCount = HandsGenerator.GetAllStraights()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllStraightsCount, allStraights.Count);
+        Assert.Equal(Combinatorics.AllStraightsCount, allStraightsCount);
     }
 
     [Theory]
@@ -168,10 +179,12 @@ public class GeneratorTests
     public void AllFlushesSanityCheck()
     {
         // Arrange
-        List<Cards> allFlushes = HandsGenerator.GetAllFlushes().ToList();
+        int allFlushesCount = HandsGenerator.GetAllFlushes()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllFlushesCount, allFlushes.Count);
+        Assert.Equal(Combinatorics.AllFlushesCount, allFlushesCount);
     }
 
     [Theory]
@@ -187,10 +200,12 @@ public class GeneratorTests
     public void AllFullHouseSanityCheck()
     {
         // Arrange
-        List<Cards> allFullHouse = HandsGenerator.GetAllFullHouse().ToList();
+        int allFullHouseCount = HandsGenerator.GetAllFullHouse()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllFullHouseCount, allFullHouse.Count);
+        Assert.Equal(Combinatorics.AllFullHouseCount, allFullHouseCount);
     }
 
     [Theory]
@@ -219,10 +234,12 @@ public class GeneratorTests
     public void AllFourOfAKindSanityCheck()
     {
         // Arrange
-        List<Cards> allFourOfAKind = HandsGenerator.GetAllFourOfAKind().ToList();
+        int allFourOfAKindCount = HandsGenerator.GetAllFourOfAKind()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllFourOfAKindCount, allFourOfAKind.Count);
+        Assert.Equal(Combinatorics.AllFourOfAKindCount, allFourOfAKindCount);
     }
 
     [Theory]
@@ -238,10 +255,12 @@ public class GeneratorTests
     public void AllStraightFlushesSanityCheck()
     {
         // Arrange
-        List<Cards> allStraightFlushes = HandsGenerator.GetAllStraightFlushes().ToList();
+        int allStraightFlushesCount = HandsGenerator.GetAllStraightFlushes()
+            .Distinct()
+            .Count();
 
         // Assert
-        Assert.Equal(Combinatorics.AllStraightFlushesCount, allStraightFlushes.Count);
+        Assert.Equal(Combinatorics.AllStraightFlushesCount, allStraightFlushesCount);
     }
 
     [Theory]
