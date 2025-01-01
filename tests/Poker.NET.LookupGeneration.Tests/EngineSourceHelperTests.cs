@@ -7,9 +7,10 @@ public class EngineSourceHelperTests
     [Fact]
     public void GenerateCardsEnum_ShouldContainAllCards()
     {
+        // Arrange
         string cardsEnum = EngineSourceHelper.GenerateCardsEnum();
-        Debug.WriteLine(cardsEnum);
 
+        // Assert
         Assert.NotEmpty(cardsEnum);
     }
 }
