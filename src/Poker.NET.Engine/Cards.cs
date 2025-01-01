@@ -3,6 +3,8 @@
 [Flags]
 public enum Cards : ulong
 {
+    None,
+    
     // Clubs
     TwoOfClubs = 1UL << 0,
     ThreeOfClubs = 1UL << 1,
@@ -62,6 +64,21 @@ public enum Cards : ulong
     QueenOfSpades = 1UL << 49,
     KingOfSpades = 1UL << 50,
     AceOfSpades = 1UL << 51,
+
+    // Combined ranks
+    Twos = TwoOfClubs | TwoOfDiamonds | TwoOfHearts | TwoOfSpades,
+    Threes = ThreeOfClubs | ThreeOfDiamonds | ThreeOfHearts | ThreeOfSpades,
+    Fours = FourOfClubs | FourOfDiamonds | FourOfHearts | FourOfSpades,
+    Fives = FiveOfClubs | FiveOfDiamonds | FiveOfHearts | FiveOfSpades,
+    Sixes = SixOfClubs | SixOfDiamonds | SixOfHearts | SixOfSpades,
+    Sevens = SevenOfClubs | SevenOfDiamonds | SevenOfHearts | SevenOfSpades,
+    Eights = EightOfClubs | EightOfDiamonds | EightOfHearts | EightOfSpades,
+    Nines = NineOfClubs | NineOfDiamonds | NineOfHearts | NineOfSpades,
+    Tens = TenOfClubs | TenOfDiamonds | TenOfHearts | TenOfSpades,
+    Jacks = JackOfClubs | JackOfDiamonds | JackOfHearts | JackOfSpades,
+    Queens = QueenOfClubs | QueenOfDiamonds | QueenOfHearts | QueenOfSpades,
+    Kings = KingOfClubs | KingOfDiamonds | KingOfHearts | KingOfSpades,
+    Aces = AceOfClubs | AceOfDiamonds | AceOfHearts | AceOfSpades,
 
     // Combined suits
     Clubs = TwoOfClubs | ThreeOfClubs | FourOfClubs | FiveOfClubs | SixOfClubs |
