@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Poker.NET.LookupGeneration.Tests;
+﻿namespace Poker.NET.LookupGeneration.Tests;
 
 public class EngineSourceHelperTests
 {
