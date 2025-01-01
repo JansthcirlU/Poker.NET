@@ -1,3 +1,4 @@
+using System.Numerics;
 using Poker.NET.Engine;
 
 namespace Poker.NET.LookupGeneration;
@@ -17,6 +18,27 @@ public static class HandsGenerator
             ulong c = hand & ~hand + 1;
             ulong r = hand + c;
             hand = ((r ^ hand) >> 2) / c | r;
+        }
+    }
+
+    public static IEnumerable<HoldemHand> GetAllHands()
+    {
+        ulong holeSet = (1UL << 2) - 1;
+        ulong maxValue = 1UL << 52;
+        
+        while (holeSet < maxValue)
+        {
+            ulong communitySet = (1UL << 5) - 1;
+            
+            while (communitySet < maxValue)
+            {
+                if ((communitySet & holeSet) == 0)
+                {
+                    yield return new((Cards)holeSet, (Cards)communitySet);
+                }
+                communitySet = Gosper(communitySet);
+            }
+            holeSet = Gosper(holeSet);
         }
     }
 
@@ -251,5 +273,12 @@ public static class HandsGenerator
         return GetCombinationsRecursive(rest, count - 1)
             .Select<List<Cards>, List<Cards>>(combo => [first, .. combo])
             .Concat(GetCombinationsRecursive(rest, count));
+    }
+
+    private static ulong Gosper(ulong x)
+    {
+        ulong y = x & ~x + 1;
+        ulong c = x + y;
+        return (((x ^ c) >> 2) / y) | c;
     }
 }
