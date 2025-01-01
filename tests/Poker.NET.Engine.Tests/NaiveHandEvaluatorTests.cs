@@ -27,4 +27,21 @@ public class NaiveHandEvaluatorTests
         // Assert
         Assert.Equal(comparison, _naiveHandEvaluator.Compare(first, second));
     }
+
+    [Theory]
+    [InlineData(
+        Cards.TwoOfClubs | Cards.ThreeOfClubs,
+        Cards.FourOfDiamonds | Cards.FiveOfHearts | Cards.AceOfSpades | Cards.QueenOfHearts | Cards.SixOfSpades,
+        HandScore.Straight)]
+    public void NaiveHandEvaluatorSamples(Cards holeCards, Cards communityCards, HandScore expected)
+    {
+        // Arrange
+        HoldemHand hand = new(holeCards, communityCards);
+
+        // Act
+        HandScore score = NaiveHandEvaluator.GetHighestScore(hand);
+
+        // Assert
+        Assert.Equal(expected, score);
+    }
 }
