@@ -152,16 +152,16 @@ public class GeneratorTests
         Assert.Equal(5, straight.GetCardCount());
         Assert.False(straight.AreTheSameSuit()); // Must not be straight flush
 
-        bool isFiveHigh = straight.ContainsRanks(Ranks.Fives, Ranks.Fours, Ranks.Threes, Ranks.Twos, Ranks.Aces);
-        bool isSixHigh = straight.ContainsRanks(Ranks.Sixes, Ranks.Fives, Ranks.Fours, Ranks.Threes, Ranks.Twos);
-        bool isSevenHigh = straight.ContainsRanks(Ranks.Sevens, Ranks.Sixes, Ranks.Fives, Ranks.Fours, Ranks.Threes);
-        bool isEightHigh = straight.ContainsRanks(Ranks.Eights, Ranks.Sevens, Ranks.Sixes, Ranks.Fives, Ranks.Fours);
-        bool isNineHigh = straight.ContainsRanks(Ranks.Nines, Ranks.Eights, Ranks.Sevens, Ranks.Sixes, Ranks.Fives);
-        bool isTenHigh = straight.ContainsRanks(Ranks.Tens, Ranks.Nines, Ranks.Eights, Ranks.Sevens, Ranks.Sixes);
-        bool isJackHigh = straight.ContainsRanks(Ranks.Jacks, Ranks.Tens, Ranks.Nines, Ranks.Eights, Ranks.Sevens);
-        bool isQueenHigh = straight.ContainsRanks(Ranks.Queens, Ranks.Jacks, Ranks.Tens, Ranks.Nines, Ranks.Eights);
-        bool isKingHigh = straight.ContainsRanks(Ranks.Kings, Ranks.Queens, Ranks.Jacks, Ranks.Tens, Ranks.Nines);
-        bool isAceHigh = straight.ContainsRanks(Ranks.Aces, Ranks.Kings, Ranks.Queens, Ranks.Jacks, Ranks.Tens);
+        bool isFiveHigh = straight.ContainsRanks(Rank.Fives, Rank.Fours, Rank.Threes, Rank.Twos, Rank.Aces);
+        bool isSixHigh = straight.ContainsRanks(Rank.Sixes, Rank.Fives, Rank.Fours, Rank.Threes, Rank.Twos);
+        bool isSevenHigh = straight.ContainsRanks(Rank.Sevens, Rank.Sixes, Rank.Fives, Rank.Fours, Rank.Threes);
+        bool isEightHigh = straight.ContainsRanks(Rank.Eights, Rank.Sevens, Rank.Sixes, Rank.Fives, Rank.Fours);
+        bool isNineHigh = straight.ContainsRanks(Rank.Nines, Rank.Eights, Rank.Sevens, Rank.Sixes, Rank.Fives);
+        bool isTenHigh = straight.ContainsRanks(Rank.Tens, Rank.Nines, Rank.Eights, Rank.Sevens, Rank.Sixes);
+        bool isJackHigh = straight.ContainsRanks(Rank.Jacks, Rank.Tens, Rank.Nines, Rank.Eights, Rank.Sevens);
+        bool isQueenHigh = straight.ContainsRanks(Rank.Queens, Rank.Jacks, Rank.Tens, Rank.Nines, Rank.Eights);
+        bool isKingHigh = straight.ContainsRanks(Rank.Kings, Rank.Queens, Rank.Jacks, Rank.Tens, Rank.Nines);
+        bool isAceHigh = straight.ContainsRanks(Rank.Aces, Rank.Kings, Rank.Queens, Rank.Jacks, Rank.Tens);
         Assert.True(
             isFiveHigh ||
             isSixHigh ||
@@ -271,16 +271,16 @@ public class GeneratorTests
         Assert.Equal(5, straightFlush.GetCardCount());
         Assert.True(straightFlush.AreTheSameSuit());
 
-        bool isFiveHigh = straightFlush.ContainsRanks(Ranks.Fives, Ranks.Fours, Ranks.Threes, Ranks.Twos, Ranks.Aces);
-        bool isSixHigh = straightFlush.ContainsRanks(Ranks.Sixes, Ranks.Fives, Ranks.Fours, Ranks.Threes, Ranks.Twos);
-        bool isSevenHigh = straightFlush.ContainsRanks(Ranks.Sevens, Ranks.Sixes, Ranks.Fives, Ranks.Fours, Ranks.Threes);
-        bool isEightHigh = straightFlush.ContainsRanks(Ranks.Eights, Ranks.Sevens, Ranks.Sixes, Ranks.Fives, Ranks.Fours);
-        bool isNineHigh = straightFlush.ContainsRanks(Ranks.Nines, Ranks.Eights, Ranks.Sevens, Ranks.Sixes, Ranks.Fives);
-        bool isTenHigh = straightFlush.ContainsRanks(Ranks.Tens, Ranks.Nines, Ranks.Eights, Ranks.Sevens, Ranks.Sixes);
-        bool isJackHigh = straightFlush.ContainsRanks(Ranks.Jacks, Ranks.Tens, Ranks.Nines, Ranks.Eights, Ranks.Sevens);
-        bool isQueenHigh = straightFlush.ContainsRanks(Ranks.Queens, Ranks.Jacks, Ranks.Tens, Ranks.Nines, Ranks.Eights);
-        bool isKingHigh = straightFlush.ContainsRanks(Ranks.Kings, Ranks.Queens, Ranks.Jacks, Ranks.Tens, Ranks.Nines);
-        bool isAceHigh = straightFlush.ContainsRanks(Ranks.Aces, Ranks.Kings, Ranks.Queens, Ranks.Jacks, Ranks.Tens);
+        bool isFiveHigh = straightFlush.ContainsRanks(Rank.Fives, Rank.Fours, Rank.Threes, Rank.Twos, Rank.Aces);
+        bool isSixHigh = straightFlush.ContainsRanks(Rank.Sixes, Rank.Fives, Rank.Fours, Rank.Threes, Rank.Twos);
+        bool isSevenHigh = straightFlush.ContainsRanks(Rank.Sevens, Rank.Sixes, Rank.Fives, Rank.Fours, Rank.Threes);
+        bool isEightHigh = straightFlush.ContainsRanks(Rank.Eights, Rank.Sevens, Rank.Sixes, Rank.Fives, Rank.Fours);
+        bool isNineHigh = straightFlush.ContainsRanks(Rank.Nines, Rank.Eights, Rank.Sevens, Rank.Sixes, Rank.Fives);
+        bool isTenHigh = straightFlush.ContainsRanks(Rank.Tens, Rank.Nines, Rank.Eights, Rank.Sevens, Rank.Sixes);
+        bool isJackHigh = straightFlush.ContainsRanks(Rank.Jacks, Rank.Tens, Rank.Nines, Rank.Eights, Rank.Sevens);
+        bool isQueenHigh = straightFlush.ContainsRanks(Rank.Queens, Rank.Jacks, Rank.Tens, Rank.Nines, Rank.Eights);
+        bool isKingHigh = straightFlush.ContainsRanks(Rank.Kings, Rank.Queens, Rank.Jacks, Rank.Tens, Rank.Nines);
+        bool isAceHigh = straightFlush.ContainsRanks(Rank.Aces, Rank.Kings, Rank.Queens, Rank.Jacks, Rank.Tens);
         Assert.True(
             isFiveHigh ||
             isSixHigh ||

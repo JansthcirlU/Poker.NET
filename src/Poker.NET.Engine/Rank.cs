@@ -1,6 +1,6 @@
 namespace Poker.NET.Engine;
 
-public enum Ranks : ushort
+public enum Rank : ushort
 {
     None,
     Twos,

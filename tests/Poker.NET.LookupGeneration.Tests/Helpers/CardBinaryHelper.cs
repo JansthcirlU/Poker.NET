@@ -37,26 +37,26 @@ public static class CardBinaryHelper
         || (cards & Cards.Kings) == cards
         || (cards & Cards.Aces) == cards;
     
-    public static bool ContainsRanks(this Cards cards, params Ranks[] ranks)
+    public static bool ContainsRanks(this Cards cards, params Rank[] ranks)
     {
-        foreach (Ranks rank in ranks)
+        foreach (Rank rank in ranks)
         {
             // Convert the rank enum value to its corresponding Cards value
             Cards cardsRank = rank switch
             {
-                Ranks.Twos => Cards.Twos,
-                Ranks.Threes => Cards.Threes,
-                Ranks.Fours => Cards.Fours,
-                Ranks.Fives => Cards.Fives,
-                Ranks.Sixes => Cards.Sixes,
-                Ranks.Sevens => Cards.Sevens,
-                Ranks.Eights => Cards.Eights,
-                Ranks.Nines => Cards.Nines,
-                Ranks.Tens => Cards.Tens,
-                Ranks.Jacks => Cards.Jacks,
-                Ranks.Queens => Cards.Queens,
-                Ranks.Kings => Cards.Kings,
-                Ranks.Aces => Cards.Aces,
+                Rank.Twos => Cards.Twos,
+                Rank.Threes => Cards.Threes,
+                Rank.Fours => Cards.Fours,
+                Rank.Fives => Cards.Fives,
+                Rank.Sixes => Cards.Sixes,
+                Rank.Sevens => Cards.Sevens,
+                Rank.Eights => Cards.Eights,
+                Rank.Nines => Cards.Nines,
+                Rank.Tens => Cards.Tens,
+                Rank.Jacks => Cards.Jacks,
+                Rank.Queens => Cards.Queens,
+                Rank.Kings => Cards.Kings,
+                Rank.Aces => Cards.Aces,
                 _ => throw new ArgumentException($"Invalid rank: {rank}")
             };
 
