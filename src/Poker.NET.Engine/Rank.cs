@@ -3,17 +3,17 @@ namespace Poker.NET.Engine;
 public enum Rank : ushort
 {
     None,
-    Twos,
-    Threes,
-    Fours,
-    Fives,
-    Sixes,
-    Sevens,
-    Eights,
-    Nines,
-    Tens,
-    Jacks,
-    Queens,
-    Kings,
-    Aces
+    Two,
+    Three,
+    Four,
+    Five,
+    Six,
+    Seven,
+    Eight,
+    Nine,
+    Ten,
+    Jack,
+    Queen,
+    King,
+    Ace
 }

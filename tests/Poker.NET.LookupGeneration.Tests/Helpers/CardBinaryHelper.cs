@@ -44,19 +44,19 @@ public static class CardBinaryHelper
             // Convert the rank enum value to its corresponding Cards value
             Cards cardsRank = rank switch
             {
-                Rank.Twos => Cards.Twos,
-                Rank.Threes => Cards.Threes,
-                Rank.Fours => Cards.Fours,
-                Rank.Fives => Cards.Fives,
-                Rank.Sixes => Cards.Sixes,
-                Rank.Sevens => Cards.Sevens,
-                Rank.Eights => Cards.Eights,
-                Rank.Nines => Cards.Nines,
-                Rank.Tens => Cards.Tens,
-                Rank.Jacks => Cards.Jacks,
-                Rank.Queens => Cards.Queens,
-                Rank.Kings => Cards.Kings,
-                Rank.Aces => Cards.Aces,
+                Rank.Two => Cards.Twos,
+                Rank.Three => Cards.Threes,
+                Rank.Four => Cards.Fours,
+                Rank.Five => Cards.Fives,
+                Rank.Six => Cards.Sixes,
+                Rank.Seven => Cards.Sevens,
+                Rank.Eight => Cards.Eights,
+                Rank.Nine => Cards.Nines,
+                Rank.Ten => Cards.Tens,
+                Rank.Jack => Cards.Jacks,
+                Rank.Queen => Cards.Queens,
+                Rank.King => Cards.Kings,
+                Rank.Ace => Cards.Aces,
                 _ => throw new ArgumentException($"Invalid rank: {rank}")
             };
 
