@@ -41,7 +41,6 @@ public static class EngineSourceHelper
                 .AddCategory("Straight", HandsGenerator.GetAllStraights())
                 .AddCategory("Flush", HandsGenerator.GetAllFlushes())
                 .AddCategory("Full House", HandsGenerator.GetAllFullHouse())
-                .AddCategory("Four Of A Kind", HandsGenerator.GetAllFourOfAKind())
                 .AddCategory("Straight Flush", HandsGenerator.GetAllStraightFlushes())
             .AppendLine("}");
         return cardsEnumBuilder.ToString();
@@ -63,7 +62,7 @@ public static class EngineSourceHelper
 
     private static StringBuilder AddRanks(this StringBuilder cardsEnumBuilder)
     {
-        cardsEnumBuilder.AppendLine("\n    // Ranks");
+        cardsEnumBuilder.AppendLine("\n    // Ranks (four of a kind)");
         foreach (IGrouping<string, string> cardsByRank in GetCardNames().GroupBy(n => n.Split("Of").First()))
         {
             cardsEnumBuilder
