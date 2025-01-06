@@ -1,7 +1,7 @@
-using Poker.NET.Engine.Evaluators.Naive.Hands.Base;
+using Poker.NET.Engine.Hands.Base;
 using Poker.NET.Engine.Helpers;
 
-namespace Poker.NET.Engine.Evaluators.Naive.Hands;
+namespace Poker.NET.Engine.Hands;
 
 public readonly struct HighCard : IHand<HighCard>
 {

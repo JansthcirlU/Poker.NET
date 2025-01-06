@@ -1,5 +1,5 @@
 using Poker.NET.Engine;
-using Poker.NET.LookupGeneration.Tests.Helpers;
+using Poker.NET.Engine.Helpers;
 
 namespace Poker.NET.LookupGeneration.Tests;
 

@@ -1,6 +1,6 @@
 using Poker.NET.Engine.Evaluators.Base;
-using Poker.NET.Engine.Evaluators.Naive.Hands;
-using Poker.NET.Engine.Evaluators.Naive.Hands.Base;
+using Poker.NET.Engine.Hands;
+using Poker.NET.Engine.Hands.Base;
 using Poker.NET.Engine.Helpers;
 
 namespace Poker.NET.Engine.Evaluators.Naive;

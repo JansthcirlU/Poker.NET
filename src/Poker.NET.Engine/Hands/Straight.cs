@@ -1,7 +1,7 @@
-using Poker.NET.Engine.Evaluators.Naive.Hands.Base;
+using Poker.NET.Engine.Hands.Base;
 using Poker.NET.Engine.Helpers;
 
-namespace Poker.NET.Engine.Evaluators.Naive.Hands;
+namespace Poker.NET.Engine.Hands;
 
 public readonly struct Straight : IHand<Straight>
 {
@@ -24,7 +24,7 @@ public readonly struct Straight : IHand<Straight>
             .Select(HandScoreHelper.GetStraightRank)
             .OrderByDescending(r => r);
         if (!matchingStraightRanks.Any()) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain any straights.");
-        
+
         Rank highestRank = matchingStraightRanks.First();
         return new(highestRank);
     }

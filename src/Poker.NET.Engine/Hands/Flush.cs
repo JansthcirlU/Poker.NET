@@ -1,7 +1,7 @@
-using Poker.NET.Engine.Evaluators.Naive.Hands.Base;
+using Poker.NET.Engine.Hands.Base;
 using Poker.NET.Engine.Helpers;
 
-namespace Poker.NET.Engine.Evaluators.Naive.Hands;
+namespace Poker.NET.Engine.Hands;
 
 public readonly struct Flush : IHand<Flush>
 {
@@ -32,7 +32,7 @@ public readonly struct Flush : IHand<Flush>
     public static Flush FromHand(HoldemHand hand)
     {
         Cards cards = hand.HoleCards | hand.CommunityCards;
-        IEnumerable<(Rank,Rank,Rank,Rank,Rank)> matchingFlushRanks = HandScoreHelper.GetFlush()
+        IEnumerable<(Rank, Rank, Rank, Rank, Rank)> matchingFlushRanks = HandScoreHelper.GetFlush()
             .Where(flush => (cards & flush) == flush)
             .Select(HandScoreHelper.GetFlushRanks)
             .OrderByDescending(rs => rs.Highest)
@@ -41,7 +41,7 @@ public readonly struct Flush : IHand<Flush>
                         .ThenByDescending(rs => rs.Fourth)
                             .ThenByDescending(rs => rs.Fifth);
         if (!matchingFlushRanks.Any()) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain any flushes.");
-        
+
         (Rank highestRank, Rank secondRank, Rank thirdRank, Rank fourthRank, Rank fifthRank) = matchingFlushRanks.First();
         return new(highestRank, secondRank, thirdRank, fourthRank, fifthRank);
     }

@@ -1,4 +1,4 @@
-namespace Poker.NET.Engine.Evaluators.Naive.Hands.Base;
+namespace Poker.NET.Engine.Hands.Base;
 
 public interface IHand<THand> : IHand, IComparable<THand>
     where THand : struct, IHand<THand>

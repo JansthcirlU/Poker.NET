@@ -1,7 +1,7 @@
-using Poker.NET.Engine.Evaluators.Naive.Hands.Base;
+using Poker.NET.Engine.Hands.Base;
 using Poker.NET.Engine.Helpers;
 
-namespace Poker.NET.Engine.Evaluators.Naive.Hands;
+namespace Poker.NET.Engine.Hands;
 
 public readonly struct Pair : IHand<Pair>
 {
@@ -29,12 +29,12 @@ public readonly struct Pair : IHand<Pair>
     public static Pair FromHand(HoldemHand hand)
     {
         Cards cards = hand.HoleCards | hand.CommunityCards;
-        IEnumerable<(Cards,Rank)> matchingPairs = HandScoreHelper.GetPairs()
+        IEnumerable<(Cards, Rank)> matchingPairs = HandScoreHelper.GetPairs()
             .Where(pair => (cards & pair) == pair)
             .Select(pair => (Cards: pair, Rank: HandScoreHelper.GetPairRank(pair)))
             .OrderByDescending(t => t.Rank);
         if (!matchingPairs.Any()) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain any pairs.");
-        
+
         (Cards pair, Rank pairRank) = matchingPairs.First();
         Rank[] kickersByRank = (cards & ~pair).GetIndividualCards()
             .Select(c => c.GetRank())

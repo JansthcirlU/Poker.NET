@@ -1,7 +1,7 @@
-using Poker.NET.Engine.Evaluators.Naive.Hands.Base;
+using Poker.NET.Engine.Hands.Base;
 using Poker.NET.Engine.Helpers;
 
-namespace Poker.NET.Engine.Evaluators.Naive.Hands;
+namespace Poker.NET.Engine.Hands;
 
 public readonly struct ThreeOfAKind : IHand<ThreeOfAKind>
 {
@@ -26,12 +26,12 @@ public readonly struct ThreeOfAKind : IHand<ThreeOfAKind>
     public static ThreeOfAKind FromHand(HoldemHand hand)
     {
         Cards cards = hand.HoleCards | hand.CommunityCards;
-        IEnumerable<(Cards,Rank)> matchingThreeOfAKinds = HandScoreHelper.GetThreeOfAKind()
+        IEnumerable<(Cards, Rank)> matchingThreeOfAKinds = HandScoreHelper.GetThreeOfAKind()
             .Where(threeOfAKind => (cards & threeOfAKind) == threeOfAKind)
             .Select(threeOfAKind => (Cards: threeOfAKind, Rank: HandScoreHelper.GetThreeOfAKindRank(threeOfAKind)))
             .OrderByDescending(t => t.Rank);
         if (!matchingThreeOfAKinds.Any()) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain any three of a kind.");
-        
+
         (Cards threeOfAKind, Rank threeOfAKindRank) = matchingThreeOfAKinds.First();
         Rank[] kickersByRank = (cards & ~threeOfAKind).GetIndividualCards()
             .Select(c => c.GetRank())

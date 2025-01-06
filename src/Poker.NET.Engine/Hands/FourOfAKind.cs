@@ -1,7 +1,7 @@
-using Poker.NET.Engine.Evaluators.Naive.Hands.Base;
+using Poker.NET.Engine.Hands.Base;
 using Poker.NET.Engine.Helpers;
 
-namespace Poker.NET.Engine.Evaluators.Naive.Hands;
+namespace Poker.NET.Engine.Hands;
 
 public readonly struct FourOfAKind : IHand<FourOfAKind>
 {
@@ -26,7 +26,7 @@ public readonly struct FourOfAKind : IHand<FourOfAKind>
         IEnumerable<Cards> matchingFourOfAKinds = HandScoreHelper.GetFourOfAKind()
             .Where(fourOfAKind => (cards & fourOfAKind) == fourOfAKind);
         if (matchingFourOfAKinds.Count() != 1) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain exactly one four of a kind.");
-        
+
         Cards fourOfAKind = matchingFourOfAKinds.Single();
         Rank fourOfAKindRank = HandScoreHelper.GetFourOfAKindRank(fourOfAKind);
         Rank kickerRank = (cards & ~fourOfAKind).GetIndividualCards()

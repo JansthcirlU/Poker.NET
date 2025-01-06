@@ -1,7 +1,7 @@
-using Poker.NET.Engine.Evaluators.Naive.Hands.Base;
+using Poker.NET.Engine.Hands.Base;
 using Poker.NET.Engine.Helpers;
 
-namespace Poker.NET.Engine.Evaluators.Naive.Hands;
+namespace Poker.NET.Engine.Hands;
 
 public readonly struct TwoPair : IHand<TwoPair>
 {
@@ -26,13 +26,13 @@ public readonly struct TwoPair : IHand<TwoPair>
     public static TwoPair FromHand(HoldemHand hand)
     {
         Cards cards = hand.HoleCards | hand.CommunityCards;
-        IEnumerable<(Cards,(Rank,Rank))> matchingTwoPairs = HandScoreHelper.GetTwoPairs()
+        IEnumerable<(Cards, (Rank, Rank))> matchingTwoPairs = HandScoreHelper.GetTwoPairs()
             .Where(twoPair => (cards & twoPair) == twoPair)
             .Select(twoPair => (Cards: twoPair, Ranks: HandScoreHelper.GetTwoPairRanks(twoPair)))
             .OrderByDescending(t => t.Ranks.HighestPairRank)
                 .ThenByDescending(t => t.Ranks.LowestPairRank);
         if (matchingTwoPairs.Count() != 1) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain exactly one two pair.");
-        
+
         (Cards twoPair, (Rank highestPairRank, Rank lowestPairRank)) = matchingTwoPairs.First();
         Rank kickerRank = (cards & ~twoPair).GetIndividualCards()
             .Select(c => c.GetRank())
