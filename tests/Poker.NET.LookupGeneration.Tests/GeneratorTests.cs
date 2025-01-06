@@ -152,7 +152,7 @@ public class GeneratorTests
         Assert.Equal(5, straight.GetCardCount());
         Assert.False(straight.AreTheSameSuit()); // Must not be straight flush
 
-        bool isFiveHigh = straight.ContainsRanks(Rank.Five, Rank.Four, Rank.Three, Rank.Two, Rank.Ace);
+        bool isFiveHigh = straight.ContainsRanks(Rank.Five, Rank.Four, Rank.Three, Rank.Two, Rank.AceHigh);
         bool isSixHigh = straight.ContainsRanks(Rank.Six, Rank.Five, Rank.Four, Rank.Three, Rank.Two);
         bool isSevenHigh = straight.ContainsRanks(Rank.Seven, Rank.Six, Rank.Five, Rank.Four, Rank.Three);
         bool isEightHigh = straight.ContainsRanks(Rank.Eight, Rank.Seven, Rank.Six, Rank.Five, Rank.Four);
@@ -161,7 +161,7 @@ public class GeneratorTests
         bool isJackHigh = straight.ContainsRanks(Rank.Jack, Rank.Ten, Rank.Nine, Rank.Eight, Rank.Seven);
         bool isQueenHigh = straight.ContainsRanks(Rank.Queen, Rank.Jack, Rank.Ten, Rank.Nine, Rank.Eight);
         bool isKingHigh = straight.ContainsRanks(Rank.King, Rank.Queen, Rank.Jack, Rank.Ten, Rank.Nine);
-        bool isAceHigh = straight.ContainsRanks(Rank.Ace, Rank.King, Rank.Queen, Rank.Jack, Rank.Ten);
+        bool isAceHigh = straight.ContainsRanks(Rank.AceHigh, Rank.King, Rank.Queen, Rank.Jack, Rank.Ten);
         Assert.True(
             isFiveHigh ||
             isSixHigh ||
@@ -271,7 +271,7 @@ public class GeneratorTests
         Assert.Equal(5, straightFlush.GetCardCount());
         Assert.True(straightFlush.AreTheSameSuit());
 
-        bool isFiveHigh = straightFlush.ContainsRanks(Rank.Five, Rank.Four, Rank.Three, Rank.Two, Rank.Ace);
+        bool isFiveHigh = straightFlush.ContainsRanks(Rank.Five, Rank.Four, Rank.Three, Rank.Two, Rank.AceHigh);
         bool isSixHigh = straightFlush.ContainsRanks(Rank.Six, Rank.Five, Rank.Four, Rank.Three, Rank.Two);
         bool isSevenHigh = straightFlush.ContainsRanks(Rank.Seven, Rank.Six, Rank.Five, Rank.Four, Rank.Three);
         bool isEightHigh = straightFlush.ContainsRanks(Rank.Eight, Rank.Seven, Rank.Six, Rank.Five, Rank.Four);
@@ -280,7 +280,7 @@ public class GeneratorTests
         bool isJackHigh = straightFlush.ContainsRanks(Rank.Jack, Rank.Ten, Rank.Nine, Rank.Eight, Rank.Seven);
         bool isQueenHigh = straightFlush.ContainsRanks(Rank.Queen, Rank.Jack, Rank.Ten, Rank.Nine, Rank.Eight);
         bool isKingHigh = straightFlush.ContainsRanks(Rank.King, Rank.Queen, Rank.Jack, Rank.Ten, Rank.Nine);
-        bool isAceHigh = straightFlush.ContainsRanks(Rank.Ace, Rank.King, Rank.Queen, Rank.Jack, Rank.Ten);
+        bool isAceHigh = straightFlush.ContainsRanks(Rank.AceHigh, Rank.King, Rank.Queen, Rank.Jack, Rank.Ten);
         Assert.True(
             isFiveHigh ||
             isSixHigh ||
