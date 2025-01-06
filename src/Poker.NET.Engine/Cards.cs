@@ -65,7 +65,7 @@ public enum Cards : ulong
     KingOfSpades = 1ul << 50,
     AceOfSpades = 1ul << 51,
 
-    // Ranks
+    // Ranks (also four of a kind)
     Twos = TwoOfClubs | TwoOfDiamonds | TwoOfHearts | TwoOfSpades,
     Threes = ThreeOfClubs | ThreeOfDiamonds | ThreeOfHearts | ThreeOfSpades,
     Fours = FourOfClubs | FourOfDiamonds | FourOfHearts | FourOfSpades,
@@ -22090,21 +22090,6 @@ public enum Cards : ulong
     FullHouse3742 = KingOfDiamonds | AceOfDiamonds | KingOfHearts | AceOfHearts | AceOfSpades,
     FullHouse3743 = KingOfDiamonds | AceOfDiamonds | AceOfHearts | KingOfSpades | AceOfSpades,
     FullHouse3744 = AceOfDiamonds | KingOfHearts | AceOfHearts | KingOfSpades | AceOfSpades,
-
-    // Four Of A Kind
-    FourOfAKind1 = Twos,
-    FourOfAKind2 = Threes,
-    FourOfAKind3 = Fours,
-    FourOfAKind4 = Fives,
-    FourOfAKind5 = Sixes,
-    FourOfAKind6 = Sevens,
-    FourOfAKind7 = Eights,
-    FourOfAKind8 = Nines,
-    FourOfAKind9 = Tens,
-    FourOfAKind10 = Jacks,
-    FourOfAKind11 = Queens,
-    FourOfAKind12 = Kings,
-    FourOfAKind13 = Aces,
 
     // Straight Flush
     StraightFlush1 = TwoOfClubs | ThreeOfClubs | FourOfClubs | FiveOfClubs | AceOfClubs,
