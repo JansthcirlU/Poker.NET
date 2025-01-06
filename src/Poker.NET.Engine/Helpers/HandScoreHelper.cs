@@ -2,22 +2,6 @@ namespace Poker.NET.Engine.Helpers;
 
 public static class HandScoreHelper
 {
-    private static readonly Dictionary<HandScore, IEnumerable<Cards>> HandScores = new()
-        {
-            { HandScore.OnePair, GetPairs() },
-            { HandScore.TwoPair, GetTwoPairs() },
-            { HandScore.ThreeOfAKind, GetThreeOfAKind() },
-            { HandScore.Straight, GetStraight() },
-            { HandScore.Flush, GetFlush() },
-            { HandScore.FullHouse, GetFullHouse() },
-            { HandScore.FourOfAKind, GetFourOfAKind() },
-            { HandScore.StraightFlush, GetStraightFlush() }
-        };
-    
-    public static readonly Dictionary<Cards, HandScore> ScoresPerHand = HandScores
-        .SelectMany(kvp => kvp.Value.Select(v => new { Key = v, Value = kvp.Key }))
-        .ToDictionary(tuple => tuple.Key, tuple => tuple.Value);
-
     public static Rank GetPairRank(Cards pair)
         => pair switch
         {
