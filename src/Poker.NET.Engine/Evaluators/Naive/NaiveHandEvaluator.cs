@@ -96,7 +96,7 @@ public class NaiveHandEvaluator : IHandEvaluator
         throw new InvalidOperationException($"Cannot compare the hold'em hands {firstCards.ToCardString()} and {secondCards.ToCardString()}.");
     }
     
-    internal static IHand ToHand(HoldemHand hand)
+    private static IHand ToHand(HoldemHand hand)
     {
         // Whichever matches first is the strongest hand
         if (StraightFlush.TryGetFromHand(hand, out StraightFlush? straightFlush)) return straightFlush!;
