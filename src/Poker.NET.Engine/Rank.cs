@@ -3,6 +3,7 @@ namespace Poker.NET.Engine;
 public enum Rank : ushort
 {
     None,
+    AceLow,
     Two,
     Three,
     Four,
@@ -15,5 +16,5 @@ public enum Rank : ushort
     Jack,
     Queen,
     King,
-    Ace
+    AceHigh
 }

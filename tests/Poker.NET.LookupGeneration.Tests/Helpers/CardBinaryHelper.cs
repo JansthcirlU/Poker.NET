@@ -56,7 +56,7 @@ public static class CardBinaryHelper
                 Rank.Jack => Cards.Jacks,
                 Rank.Queen => Cards.Queens,
                 Rank.King => Cards.Kings,
-                Rank.Ace => Cards.Aces,
+                Rank.AceLow or Rank.AceHigh => Cards.Aces,
                 _ => throw new ArgumentException($"Invalid rank: {rank}")
             };
 
