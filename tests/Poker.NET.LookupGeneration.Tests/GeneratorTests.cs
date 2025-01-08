@@ -1,3 +1,4 @@
+using System.Numerics;
 using Poker.NET.Engine;
 using Poker.NET.Engine.Helpers;
 
@@ -5,20 +6,79 @@ namespace Poker.NET.LookupGeneration.Tests;
 
 public class GeneratorTests
 {
-    public static TheoryData<Cards> AllPairs => [.. HandsGenerator.GetAllPairs()];
-    public static TheoryData<Cards> AllTwoPairs => [.. HandsGenerator.GetAllTwoPairs()];
-    public static TheoryData<Cards> AllThreeOfAKind => [.. HandsGenerator.GetAllThreeOfAKind()];
-    public static TheoryData<Cards> AllStraights => [.. HandsGenerator.GetAllStraights()];
-    public static TheoryData<Cards> AllFlushes => [.. HandsGenerator.GetAllFlushes()];
-    public static TheoryData<Cards> AllFullHouse => [.. HandsGenerator.GetAllFullHouse()];
-    public static TheoryData<Cards> AllFourOfAKind => [.. HandsGenerator.GetAllFourOfAKind()];
-    public static TheoryData<Cards> AllStraightFlushes => [.. HandsGenerator.GetAllStraightFlushes()];
+    public static readonly TheoryData<Cards> AllPairs = [.. HandsGenerator.GetAllPairs()];
+    public static readonly TheoryData<Cards> AllTwoPairs = [.. HandsGenerator.GetAllTwoPairs()];
+    public static readonly TheoryData<Cards> AllThreeOfAKind = [.. HandsGenerator.GetAllThreeOfAKind()];
+    public static readonly TheoryData<Cards> AllStraights = [.. HandsGenerator.GetAllStraights()];
+    public static readonly TheoryData<Cards> AllFlushes = [.. HandsGenerator.GetAllFlushes()];
+    public static readonly TheoryData<Cards> AllFullHouse = [.. HandsGenerator.GetAllFullHouse()];
+    public static readonly TheoryData<Cards> AllFourOfAKind = [.. HandsGenerator.GetAllFourOfAKind()];
+    public static readonly TheoryData<Cards> AllStraightFlushes = [.. HandsGenerator.GetAllStraightFlushes()];
+    public static readonly TheoryData<byte> UnacceptableKValues = [.. Enumerable.Range(0, 255).Except(Enumerable.Range(1, 52)).Select(i => (byte)i)];
+
+    [Fact]
+    public void GospersHack_WhenGivenZero_ShouldThrow()
+    {
+        // Act
+        ArgumentOutOfRangeException? ex = Assert.Throws<ArgumentOutOfRangeException>(
+            () => HandsGenerator.Gosper(0)
+        );
+
+        // Assert
+        Assert.NotNull(ex);
+        Assert.StartsWith("hand ('0') must not be equal to '0'.", ex.Message);
+    }
+
+    [Fact]
+    public void GospersHack_WhenGivenMinimumUnshiftableValue_ShouldThrow()
+    {
+        // Act
+        ArgumentOutOfRangeException? ex = Assert.Throws<ArgumentOutOfRangeException>(
+            () => HandsGenerator.Gosper(ulong.MaxValue - 1)
+        );
+
+        // Assert
+        Assert.NotNull(ex);
+        Assert.StartsWith("hand ('18446744073709551614') must be less than or equal to '18446744073709551613'.", ex.Message);
+    }
+
+    [Theory]
+    [InlineData(0b01, 0b10)]
+    [InlineData(0b011, 0b101)]
+    [InlineData(0b10101, 0b10110)]
+    public void GospersHackSanityChecks(ulong hand, ulong expected)
+    {
+        // Act
+        ulong actual = HandsGenerator.Gosper(hand);
+
+        // Assert
+        Assert.True(actual > hand);
+        int handBitsSet = BitOperations.PopCount(hand);
+        int actualBitsSet = BitOperations.PopCount(actual);
+        Assert.Equal(handBitsSet, actualBitsSet);
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [MemberData(nameof(UnacceptableKValues))]
+    public void GetAllKCardHands_WhenKInUnacceptableRange_ShouldThrow(byte k)
+    {
+        // Act
+        ArgumentOutOfRangeException? ex = Assert.Throws<ArgumentOutOfRangeException>(
+            () => HandsGenerator.GetAllKCardHands(k).ToList()
+        );
+
+        // Assert
+        Assert.NotNull(ex);
+        Assert.Equal("k", ex.ParamName);
+        Assert.StartsWith("k must be between 1 and 52 (inclusive).", ex.Message);
+    }
 
     [Fact]
     public void SanityCheck()
     {
         // Arrange
-        int allSevenCardHandsCount = HandsGenerator.GetAllSevenCardHands().Count();
+        int allSevenCardHandsCount = HandsGenerator.GetAllKCardHands(7).Count();
 
         // Assert
         Assert.Equal(Combinatorics.SevenCardHandsCount, allSevenCardHandsCount);

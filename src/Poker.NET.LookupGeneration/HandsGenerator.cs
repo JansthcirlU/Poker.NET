@@ -4,19 +4,27 @@ namespace Poker.NET.LookupGeneration;
 
 public static class HandsGenerator
 {
-    public static IEnumerable<Cards> GetAllSevenCardHands()
+    public static ulong Gosper(ulong hand)
     {
-        ulong hand = (1ul << 7) - 1;
-        ulong max = hand << 52 - 7;
+        ArgumentOutOfRangeException.ThrowIfEqual(hand, 0ul, nameof(hand));
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(hand, ulong.MaxValue - 2, nameof(hand));
+
+        ulong c = hand & ~hand + 1;
+        ulong r = hand + c;
+        return ((r ^ hand) >> 2) / c | r;
+    }
+
+    public static IEnumerable<Cards> GetAllKCardHands(byte k)
+    {
+        if (k is < 1 or > 52) throw new ArgumentOutOfRangeException(nameof(k), "k must be between 1 and 52 (inclusive).");
+
+        ulong hand = (1ul << k) - 1;
+        ulong max = hand << 52 - k;
 
         while (hand <= max)
         {
             yield return (Cards)hand;
-
-            // Gosper's Hack to find the next number with n bits set
-            ulong c = hand & ~hand + 1;
-            ulong r = hand + c;
-            hand = ((r ^ hand) >> 2) / c | r;
+            hand = Gosper(hand);
         }
     }
 
@@ -272,12 +280,5 @@ public static class HandsGenerator
         return GetCombinationsRecursive(rest, count - 1)
             .Select<List<Cards>, List<Cards>>(combo => [first, .. combo])
             .Concat(GetCombinationsRecursive(rest, count));
-    }
-
-    private static ulong Gosper(ulong x)
-    {
-        ulong y = x & ~x + 1;
-        ulong c = x + y;
-        return (((x ^ c) >> 2) / y) | c;
     }
 }
