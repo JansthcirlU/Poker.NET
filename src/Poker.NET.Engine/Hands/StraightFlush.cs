@@ -23,7 +23,7 @@ public readonly struct StraightFlush : IHand<StraightFlush>
             .Where(straightFlush => (cards & straightFlush) == straightFlush)
             .Select(HandScoreHelper.GetStraightFlushRank)
             .OrderByDescending(r => r);
-        if (!matchingStraightFlushRanks.Any()) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain any straight flushes.");
+        if (!matchingStraightFlushRanks.Any()) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain a straight flush.");
 
         Rank highestRank = matchingStraightFlushRanks.First();
         return new(highestRank);

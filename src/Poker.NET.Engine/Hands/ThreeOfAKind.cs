@@ -30,7 +30,7 @@ public readonly struct ThreeOfAKind : IHand<ThreeOfAKind>
             .Where(threeOfAKind => (cards & threeOfAKind) == threeOfAKind)
             .Select(threeOfAKind => (Cards: threeOfAKind, Rank: HandScoreHelper.GetThreeOfAKindRank(threeOfAKind)))
             .OrderByDescending(t => t.Rank);
-        if (!matchingThreeOfAKinds.Any()) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain any three of a kind.");
+        if (!matchingThreeOfAKinds.Any()) throw new ArgumentException($"The hold'em hand {hand} does not contain a three of a kind.");
 
         (Cards threeOfAKind, Rank threeOfAKindRank) = matchingThreeOfAKinds.First();
         Rank[] kickersByRank = (cards & ~threeOfAKind).GetIndividualCards()

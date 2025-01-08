@@ -29,14 +29,15 @@ public readonly struct Pair : IHand<Pair>
     public static Pair FromHand(HoldemHand hand)
     {
         Cards cards = hand.HoleCards | hand.CommunityCards;
-        IEnumerable<(Cards, Rank)> matchingPairs = HandScoreHelper.GetPairs()
-            .Where(pair => (cards & pair) == pair)
-            .Select(pair => (Cards: pair, Rank: HandScoreHelper.GetPairRank(pair)))
-            .OrderByDescending(t => t.Rank);
-        if (!matchingPairs.Any()) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain any pairs.");
+        IEnumerable<(Cards pair, Rank pairRank)> pairs = cards
+            .ToRankDictionary()
+            .Where(r => r.Value.GetCardCount() == 2)
+            .Select(r => (r.Value, r.Key));
+        if (pairs.Count() != 1) throw new ArgumentException($"The hold'em hand {hand} does not contain exactly one pair.");
 
-        (Cards pair, Rank pairRank) = matchingPairs.First();
-        Rank[] kickersByRank = (cards & ~pair).GetIndividualCards()
+        (Cards pair, Rank pairRank) = pairs.Single();
+        Rank[] kickersByRank = (cards & ~pair)
+            .GetIndividualCards()
             .Select(c => c.GetRank())
             .OrderByDescending(r => r)
             .Take(3)

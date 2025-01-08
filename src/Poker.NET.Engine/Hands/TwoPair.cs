@@ -31,7 +31,7 @@ public readonly struct TwoPair : IHand<TwoPair>
             .Select(twoPair => (Cards: twoPair, Ranks: HandScoreHelper.GetTwoPairRanks(twoPair)))
             .OrderByDescending(t => t.Ranks.HighestPairRank)
                 .ThenByDescending(t => t.Ranks.LowestPairRank);
-        if (matchingTwoPairs.Count() != 1) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain exactly one two pair.");
+        if (matchingTwoPairs.Count() != 1) throw new ArgumentException($"The hold'em hand {hand} does not contain a two pair.");
 
         (Cards twoPair, (Rank highestPairRank, Rank lowestPairRank)) = matchingTwoPairs.First();
         Rank kickerRank = (cards & ~twoPair).GetIndividualCards()
