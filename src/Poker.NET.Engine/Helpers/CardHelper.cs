@@ -115,6 +115,22 @@ public static class CardHelper
         { Cards.AceOfSpades, Suit.Spades },
     };
 
+    public static Dictionary<Rank, Cards> ToRankDictionary(this Cards cards)
+        => cards.GetIndividualCards()
+            .GroupBy(c => c.GetRank())
+            .ToDictionary(
+                g => g.Key,
+                g => g.Aggregate(Cards.None, (a, b) => a | b)
+            );
+
+    public static Dictionary<Suit, Cards> ToSuitDictionary(this Cards cards)
+        => cards.GetIndividualCards()
+            .GroupBy(c => c.GetSuit())
+            .ToDictionary(
+                g => g.Key,
+                g => g.Aggregate(Cards.None, (a, b) => a | b)
+            );
+
     public static int GetCardCount(this Cards cards)
         => BitOperations.PopCount((ulong)cards);
 
