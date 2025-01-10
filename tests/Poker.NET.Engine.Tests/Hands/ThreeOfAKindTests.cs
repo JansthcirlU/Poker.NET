@@ -69,6 +69,6 @@ public class ThreeOfAKindTests : HandsTests
 
         // Assert
         Assert.NotNull(ex);
-        Assert.StartsWith($"The hold'em hand {hand} does not contain a three of a kind.", ex.Message);
+        Assert.StartsWith($"The hold'em hand {hand} does not contain exactly one three of a kind.", ex.Message);
     }
 }
