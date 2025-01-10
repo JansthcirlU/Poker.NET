@@ -24,8 +24,8 @@ public class FullHouseTests : HandsTests
     [InlineData(
         Cards.TenOfClubs | Cards.TenOfDiamonds,
         Cards.FourOfDiamonds | Cards.FourOfHearts | Cards.FourOfClubs | Cards.TwoOfDiamonds | Cards.TwoOfHearts,
-        Rank.Ten,
-        Rank.Four)]
+        Rank.Four,
+        Rank.Ten)]
     public void FullHouse_WhenConstructedWithValidCards_ShouldSucceed(
         Cards holeCards,
         Cards communityCards,
