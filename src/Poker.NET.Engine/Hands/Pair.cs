@@ -29,13 +29,13 @@ public readonly struct Pair : IHand<Pair>
     public static Pair FromHand(HoldemHand hand)
     {
         Cards cards = hand.HoleCards | hand.CommunityCards;
-        IEnumerable<(Cards pair, Rank pairRank)> multiCardHands = cards
+        IEnumerable<(Cards multiCardHand, Rank pairRank)> multiCardHands = cards
             .ToRankDictionary()
             .Where(r => r.Value.GetCardCount() > 1)
             .Select(r => (r.Value, r.Key));
-        if (multiCardHands.Any(t => t.pair.GetCardCount() > 2)) throw new ArgumentException($"The hold'em hand {hand} does not contain exactly one pair.");
+        if (multiCardHands.Any(t => t.multiCardHand.GetCardCount() > 2)) throw new ArgumentException($"The hold'em hand {hand} does not contain exactly one pair.");
         
-        IEnumerable<(Cards pair, Rank pairRank)> pairs = multiCardHands.Where(t => t.pair.GetCardCount() == 2);
+        IEnumerable<(Cards pair, Rank pairRank)> pairs = multiCardHands.Where(t => t.multiCardHand.GetCardCount() == 2);
         if (pairs.Count() != 1) throw new ArgumentException($"The hold'em hand {hand} does not contain exactly one pair.");
 
         (Cards pair, Rank pairRank) = pairs.Single();

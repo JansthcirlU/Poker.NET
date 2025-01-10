@@ -26,13 +26,17 @@ public readonly struct ThreeOfAKind : IHand<ThreeOfAKind>
     public static ThreeOfAKind FromHand(HoldemHand hand)
     {
         Cards cards = hand.HoleCards | hand.CommunityCards;
-        IEnumerable<(Cards, Rank)> matchingThreeOfAKinds = HandScoreHelper.GetThreeOfAKind()
-            .Where(threeOfAKind => (cards & threeOfAKind) == threeOfAKind)
-            .Select(threeOfAKind => (Cards: threeOfAKind, Rank: HandScoreHelper.GetThreeOfAKindRank(threeOfAKind)))
-            .OrderByDescending(t => t.Rank);
-        if (!matchingThreeOfAKinds.Any()) throw new ArgumentException($"The hold'em hand {hand} does not contain a three of a kind.");
+        IEnumerable<(Cards multiCardHand, Rank rank)> multiCardHands = cards
+            .ToRankDictionary()
+            .Where(r => r.Value.GetCardCount() > 1)
+            .Select(r => (r.Value, r.Key));
+        if (multiCardHands.Any(t => t.multiCardHand.GetCardCount() > 3)) throw new ArgumentException($"The hold'em hand {hand} does not contain exactly one three of a kind.");
+        if (multiCardHands.Any(t => t.multiCardHand.GetCardCount() == 2)) throw new ArgumentException($"The hold'em hand {hand} does not contain exactly one three of a kind.");
 
-        (Cards threeOfAKind, Rank threeOfAKindRank) = matchingThreeOfAKinds.First();
+        IEnumerable<(Cards threeOfAKind, Rank threeOfAKindRank)> threeOfAKinds = multiCardHands.Where(t => t.multiCardHand.GetCardCount() == 3);
+        if (threeOfAKinds.Count() != 1) throw new ArgumentException($"The hold'em hand {hand} does not contain exactly one three of a kind.");
+
+        (Cards threeOfAKind, Rank threeOfAKindRank) = threeOfAKinds.Single();
         Rank[] kickersByRank = (cards & ~threeOfAKind).GetIndividualCards()
             .Select(c => c.GetRank())
             .OrderByDescending(r => r)
