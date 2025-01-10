@@ -26,7 +26,7 @@ public class PairTests : HandsTests
         Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)] // Makes a pair of twos
     [InlineData(
         Cards.FourOfClubs | Cards.FiveOfDiamonds,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)] // Makes a pair of fours
+        Cards.TwoOfClubs | Cards.FourOfSpades | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)] // Makes a pair of fours
     [InlineData(
         Cards.SixOfHearts | Cards.SevenOfSpades,
         Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)] // Makes a pair of sixes
