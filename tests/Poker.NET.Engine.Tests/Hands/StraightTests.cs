@@ -23,18 +23,25 @@ public class StraightTests : HandsTests
     [Theory]
     [InlineData(
         Cards.TwoOfDiamonds | Cards.ThreeOfHearts,
-        Cards.FourOfDiamonds | Cards.FiveOfClubs | Cards.SixOfSpades | Cards.JackOfDiamonds | Cards.QueenOfSpades)]
-    public void Straight_WhenConstructedWithValidCards_ShouldSucceed(Cards holeCards, Cards communityCards)
+        Cards.FourOfDiamonds | Cards.FiveOfClubs | Cards.SixOfSpades | Cards.JackOfDiamonds | Cards.QueenOfSpades,
+        Rank.Six)]
+    public void Straight_WhenConstructedWithValidCards_ShouldSucceed(
+        Cards holeCards,
+        Cards communityCards,
+        Rank expectedHighestRank)
     {
         // Arrange
         HoldemHand hand = new(holeCards, communityCards);
         
         // Act
-        bool success = Straight.TryGetFromHand(hand, out Straight? straight);
+        bool success = Straight.TryGetFromHand(hand, out Straight? s);
 
         // Assert
         Assert.True(success);
-        Assert.NotNull(straight);
+        Assert.NotNull(s);
+
+        Straight straight = (Straight)s!;
+        Assert.Equal(expectedHighestRank, straight.HighestRank);
     }
 
     [Theory]

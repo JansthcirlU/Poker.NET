@@ -23,18 +23,28 @@ public class FullHouseTests : HandsTests
     [Theory]
     [InlineData(
         Cards.TenOfClubs | Cards.TenOfDiamonds,
-        Cards.FourOfDiamonds | Cards.FourOfHearts | Cards.FourOfClubs | Cards.TwoOfDiamonds | Cards.TwoOfHearts)]
-    public void FullHouse_WhenConstructedWithValidCards_ShouldSucceed(Cards holeCards, Cards communityCards)
+        Cards.FourOfDiamonds | Cards.FourOfHearts | Cards.FourOfClubs | Cards.TwoOfDiamonds | Cards.TwoOfHearts,
+        Rank.Ten,
+        Rank.Four)]
+    public void FullHouse_WhenConstructedWithValidCards_ShouldSucceed(
+        Cards holeCards,
+        Cards communityCards,
+        Rank expectedThreeOfAKindRank,
+        Rank expectedPairRank)
     {
         // Arrange
         HoldemHand hand = new(holeCards, communityCards);
         
         // Act
-        bool success = FullHouse.TryGetFromHand(hand, out FullHouse? fullHouse);
+        bool success = FullHouse.TryGetFromHand(hand, out FullHouse? fh);
 
         // Assert
         Assert.True(success);
-        Assert.NotNull(fullHouse);
+        Assert.NotNull(fh);
+
+        FullHouse fullHouse = (FullHouse)fh!;
+        Assert.Equal(expectedThreeOfAKindRank, fullHouse.ThreeOfAKindRank);
+        Assert.Equal(expectedPairRank, fullHouse.PairRank);
     }
 
     [Theory]

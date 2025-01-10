@@ -23,27 +23,49 @@ public class TwoPairTests : HandsTests
     [Theory]
     [InlineData(
         Cards.TwoOfDiamonds | Cards.FourOfHearts,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)]
+        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs,
+        Rank.Four,
+        Rank.Two,
+        Rank.Ten)]
     [InlineData(
         Cards.TwoOfDiamonds | Cards.FourOfHearts,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.SixOfHearts | Cards.TenOfClubs)]
+        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.SixOfHearts | Cards.TenOfClubs,
+        Rank.Six,
+        Rank.Four,
+        Rank.Ten)]
     [InlineData(
         Cards.TwoOfDiamonds | Cards.ThreeOfClubs,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.SixOfHearts | Cards.TenOfClubs)]
+        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.SixOfHearts | Cards.TenOfClubs,
+        Rank.Six,
+        Rank.Two,
+        Rank.Ten)]
     [InlineData(
         Cards.JackOfClubs | Cards.AceOfSpades,
-        Cards.FourOfHearts | Cards.FourOfClubs | Cards.SixOfSpades | Cards.SixOfHearts | Cards.TenOfClubs)]
-    public void TwoPair_WhenConstructedWithValidCards_ShouldSucceed(Cards holeCards, Cards communityCards)
+        Cards.FourOfHearts | Cards.FourOfClubs | Cards.SixOfSpades | Cards.SixOfHearts | Cards.TenOfClubs,
+        Rank.Six,
+        Rank.Four,
+        Rank.AceHigh)]
+    public void TwoPair_WhenConstructedWithValidCards_ShouldSucceed(
+        Cards holeCards,
+        Cards communityCards,
+        Rank expectedHighestPairRank,
+        Rank expectedLowestPairRank,
+        Rank expectedKickerRank)
     {
         // Arrange
         HoldemHand hand = new(holeCards, communityCards);
         
         // Act
-        bool success = TwoPair.TryGetFromHand(hand, out TwoPair? twoPair);
+        bool success = TwoPair.TryGetFromHand(hand, out TwoPair? tp);
 
         // Assert
         Assert.True(success);
-        Assert.NotNull(twoPair);
+        Assert.NotNull(tp);
+
+        TwoPair twoPair = (TwoPair)tp!;
+        Assert.Equal(expectedHighestPairRank, twoPair.HighestPairRank);
+        Assert.Equal(expectedLowestPairRank, twoPair.LowestPairRank);
+        Assert.Equal(expectedKickerRank, twoPair.KickerRank);
     }
 
     [Theory]

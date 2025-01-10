@@ -23,18 +23,28 @@ public class FourOfAKindTests : HandsTests
     [Theory]
     [InlineData(
         Cards.TwoOfDiamonds | Cards.TwoOfHearts,
-        Cards.TwoOfClubs | Cards.TwoOfSpades | Cards.FourOfClubs | Cards.EightOfHearts | Cards.TenOfClubs)]
-    public void FourOfAKind_WhenConstructedWithValidCards_ShouldSucceed(Cards holeCards, Cards communityCards)
+        Cards.TwoOfClubs | Cards.TwoOfSpades | Cards.FourOfClubs | Cards.EightOfHearts | Cards.TenOfClubs,
+        Rank.Two,
+        Rank.Ten)]
+    public void FourOfAKind_WhenConstructedWithValidCards_ShouldSucceed(
+        Cards holeCards,
+        Cards communityCards,
+        Rank expectedFourOfAKindRank,
+        Rank expectedKickerRank)
     {
         // Arrange
         HoldemHand hand = new(holeCards, communityCards);
         
         // Act
-        bool success = FourOfAKind.TryGetFromHand(hand, out FourOfAKind? fourOfAKind);
+        bool success = FourOfAKind.TryGetFromHand(hand, out FourOfAKind? f);
 
         // Assert
         Assert.True(success);
-        Assert.NotNull(fourOfAKind);
+        Assert.NotNull(f);
+
+        FourOfAKind fourOfAKind = (FourOfAKind)f!;
+        Assert.Equal(expectedFourOfAKindRank, fourOfAKind.FourOfAKindRank);
+        Assert.Equal(expectedKickerRank, fourOfAKind.KickerRank);
     }
 
     [Theory]

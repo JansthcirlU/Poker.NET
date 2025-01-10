@@ -23,21 +23,37 @@ public class ThreeOfAKindTests : HandsTests
     [Theory]
     [InlineData(
         Cards.TwoOfDiamonds | Cards.TwoOfHearts,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)]
+        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs,
+        Rank.Two,
+        Rank.Ten,
+        Rank.Eight)]
     [InlineData(
         Cards.AceOfSpades | Cards.JackOfDiamonds,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.FourOfDiamonds | Cards.FourOfHearts | Cards.TenOfClubs)]
-    public void ThreeOfAKind_WhenConstructedWithValidCards_ShouldSucceed(Cards holeCards, Cards communityCards)
+        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.FourOfDiamonds | Cards.FourOfHearts | Cards.TenOfClubs,
+        Rank.Four,
+        Rank.AceHigh,
+        Rank.Jack)]
+    public void ThreeOfAKind_WhenConstructedWithValidCards_ShouldSucceed(
+        Cards holeCards,
+        Cards communityCards,
+        Rank expectedThreeOfAKindRank,
+        Rank expectedHighestKickerRank,
+        Rank expectedLowestKickerRank)
     {
         // Arrange
         HoldemHand hand = new(holeCards, communityCards);
         
         // Act
-        bool success = ThreeOfAKind.TryGetFromHand(hand, out ThreeOfAKind? threeOfAKind);
+        bool success = ThreeOfAKind.TryGetFromHand(hand, out ThreeOfAKind? t);
 
         // Assert
         Assert.True(success);
-        Assert.NotNull(threeOfAKind);
+        Assert.NotNull(t);
+
+        ThreeOfAKind threeOfAKind = (ThreeOfAKind)t!;
+        Assert.Equal(expectedThreeOfAKindRank, threeOfAKind.ThreeOfAKindRank);
+        Assert.Equal(expectedHighestKickerRank, threeOfAKind.HighestKickerRank);
+        Assert.Equal(expectedLowestKickerRank, threeOfAKind.LowestKickerRank);
     }
 
     [Theory]

@@ -23,18 +23,29 @@ public class StraightFlushTests : HandsTests
     [Theory]
     [InlineData(
         Cards.AceOfSpades | Cards.KingOfSpades,
-        Cards.QueenOfSpades | Cards.JackOfSpades | Cards.TenOfSpades | Cards.ThreeOfDiamonds | Cards.TwoOfHearts)]
-    public void StraightFlush_WhenConstructedWithValidCards_ShouldSucceed(Cards holeCards, Cards communityCards)
+        Cards.QueenOfSpades | Cards.JackOfSpades | Cards.TenOfSpades | Cards.ThreeOfDiamonds | Cards.TwoOfHearts,
+        Rank.AceHigh)]
+    [InlineData(
+        Cards.TwoOfHearts | Cards.FourOfHearts,
+        Cards.ThreeOfHearts | Cards.FourOfDiamonds | Cards.FourOfClubs | Cards.FiveOfHearts | Cards.AceOfHearts,
+        Rank.Five)]
+    public void StraightFlush_WhenConstructedWithValidCards_ShouldSucceed(
+        Cards holeCards,
+        Cards communityCards,
+        Rank expectedHighestRank)
     {
         // Arrange
         HoldemHand hand = new(holeCards, communityCards);
         
         // Act
-        bool success = StraightFlush.TryGetFromHand(hand, out StraightFlush? straightFlush);
+        bool success = StraightFlush.TryGetFromHand(hand, out StraightFlush? sf);
 
         // Assert
         Assert.True(success);
-        Assert.NotNull(straightFlush);
+        Assert.NotNull(sf);
+
+        StraightFlush straightFlush = (StraightFlush)sf!;
+        Assert.Equal(expectedHighestRank, straightFlush.HighestRank);
     }
 
     [Theory]

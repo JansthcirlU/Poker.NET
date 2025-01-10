@@ -23,18 +23,37 @@ public class FlushTests : HandsTests
     [Theory]
     [InlineData(
         Cards.TwoOfClubs | Cards.FourOfClubs,
-        Cards.SixOfClubs | Cards.TenOfClubs | Cards.JackOfClubs | Cards.TwoOfDiamonds | Cards.AceOfHearts)]
-    public void Flush_WhenConstructedWithValidCards_ShouldSucceed(Cards holeCards, Cards communityCards)
+        Cards.SixOfClubs | Cards.TenOfClubs | Cards.JackOfClubs | Cards.TwoOfDiamonds | Cards.AceOfHearts,
+        Rank.Jack,
+        Rank.Ten,
+        Rank.Six,
+        Rank.Four,
+        Rank.Two)]
+    public void Flush_WhenConstructedWithValidCards_ShouldSucceed(
+        Cards holeCards,
+        Cards communityCards,
+        Rank expectedHighestRank,
+        Rank expectedSecondRank,
+        Rank expectedThirdRank,
+        Rank expectedFourthRank,
+        Rank expectedFifthRank)
     {
         // Arrange
         HoldemHand hand = new(holeCards, communityCards);
         
         // Act
-        bool success = Flush.TryGetFromHand(hand, out Flush? flush);
+        bool success = Flush.TryGetFromHand(hand, out Flush? f);
 
         // Assert
         Assert.True(success);
-        Assert.NotNull(flush);
+        Assert.NotNull(f);
+
+        Flush flush = (Flush)f!;
+        Assert.Equal(expectedHighestRank, flush.HighestRank);
+        Assert.Equal(expectedSecondRank, flush.SecondRank);
+        Assert.Equal(expectedThirdRank, flush.ThirdRank);
+        Assert.Equal(expectedFourthRank, flush.FourthRank);
+        Assert.Equal(expectedFifthRank, flush.FifthRank);
     }
 
     [Theory]

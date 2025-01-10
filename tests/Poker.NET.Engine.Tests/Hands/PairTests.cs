@@ -23,30 +23,62 @@ public class PairTests : HandsTests
     [Theory]
     [InlineData(
         Cards.TwoOfDiamonds | Cards.ThreeOfHearts,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)] // Makes a pair of twos
+        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs,
+        Rank.Two,
+        Rank.Ten,
+        Rank.Eight,
+        Rank.Six)] // Makes a pair of twos
     [InlineData(
         Cards.FourOfClubs | Cards.FiveOfDiamonds,
-        Cards.TwoOfClubs | Cards.FourOfSpades | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)] // Makes a pair of fours
+        Cards.TwoOfClubs | Cards.FourOfSpades | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs,
+        Rank.Four,
+        Rank.Ten,
+        Rank.Eight,
+        Rank.Six)] // Makes a pair of fours
     [InlineData(
         Cards.SixOfHearts | Cards.SevenOfSpades,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)] // Makes a pair of sixes
+        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs,
+        Rank.Six,
+        Rank.Ten,
+        Rank.Eight,
+        Rank.Seven)] // Makes a pair of sixes
     [InlineData(
         Cards.EightOfClubs | Cards.NineOfDiamonds,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)] // Makes a pair of eights
+        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs,
+        Rank.Eight,
+        Rank.Ten,
+        Rank.Nine,
+        Rank.Six)] // Makes a pair of eights
     [InlineData(
         Cards.TenOfHearts | Cards.JackOfSpades,
-        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs)] // Makes a pair of tens
-    public void Pair_WhenConstructedWithValidCards_ShouldSucceed(Cards holeCards, Cards communityCards)
+        Cards.TwoOfClubs | Cards.FourOfClubs | Cards.SixOfSpades | Cards.EightOfHearts | Cards.TenOfClubs,
+        Rank.Ten,
+        Rank.Jack,
+        Rank.Eight,
+        Rank.Six)] // Makes a pair of tens
+    public void Pair_WhenConstructedWithValidCards_ShouldSucceed(
+        Cards holeCards,
+        Cards communityCards,
+        Rank expectedPairRank,
+        Rank expectedHighestKickerRank,
+        Rank expectedMiddleKickerRank,
+        Rank expectedLowestKickerRank)
     {
         // Arrange
         HoldemHand hand = new(holeCards, communityCards);
         
         // Act
-        bool success = Pair.TryGetFromHand(hand, out Pair? pair);
+        bool success = Pair.TryGetFromHand(hand, out Pair? p);
 
         // Assert
         Assert.True(success);
-        Assert.NotNull(pair);
+        Assert.NotNull(p);
+
+        Pair pair = (Pair)p!;
+        Assert.Equal(expectedPairRank, pair.PairRank);
+        Assert.Equal(expectedHighestKickerRank, pair.HighestKickerRank);
+        Assert.Equal(expectedMiddleKickerRank, pair.MiddleKickerRank);
+        Assert.Equal(expectedLowestKickerRank, pair.LowestKickerRank);
     }
 
     [Theory]
