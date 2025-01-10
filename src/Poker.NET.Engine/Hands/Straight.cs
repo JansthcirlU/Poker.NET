@@ -11,7 +11,7 @@ public readonly struct Straight : IHand<Straight>
     {
         throw new InvalidOperationException("You must not use the default constructor to create a Straight.");
     }
-    public Straight(Rank highestRank)
+    private Straight(Rank highestRank)
     {
         HighestRank = highestRank;
     }

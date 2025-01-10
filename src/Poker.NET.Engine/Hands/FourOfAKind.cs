@@ -12,7 +12,7 @@ public readonly struct FourOfAKind : IHand<FourOfAKind>
     {
         throw new InvalidOperationException("You must not use the default constructor to create a FourOfAKind.");
     }
-    public FourOfAKind(
+    private FourOfAKind(
         Rank fourOfAKindRank,
         Rank kickerRank)
     {

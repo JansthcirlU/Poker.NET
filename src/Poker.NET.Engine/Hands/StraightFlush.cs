@@ -11,7 +11,7 @@ public readonly struct StraightFlush : IHand<StraightFlush>
     {
         throw new InvalidOperationException("You must not use the default constructor to create a StraightFlush.");
     }
-    public StraightFlush(Rank highestRank)
+    private StraightFlush(Rank highestRank)
     {
         HighestRank = highestRank;
     }

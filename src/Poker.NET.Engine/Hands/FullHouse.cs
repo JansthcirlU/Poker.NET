@@ -12,7 +12,7 @@ public readonly struct FullHouse : IHand<FullHouse>
     {
         throw new InvalidOperationException("You must not use the default constructor to create a FullHouse.");
     }
-    public FullHouse(
+    private FullHouse(
         Rank threeOfAKindRank,
         Rank pairRank)
     {

@@ -13,7 +13,7 @@ public readonly struct ThreeOfAKind : IHand<ThreeOfAKind>
     {
         throw new InvalidOperationException("You must not use the default constructor to create a ThreeOfAKind.");
     }
-    public ThreeOfAKind(
+    private ThreeOfAKind(
         Rank threeOfAKindRank,
         Rank highestKickerRank,
         Rank lowestKickerRank)

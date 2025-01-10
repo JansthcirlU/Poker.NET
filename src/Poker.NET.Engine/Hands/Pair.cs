@@ -14,7 +14,7 @@ public readonly struct Pair : IHand<Pair>
     {
         throw new InvalidOperationException("You must not use the default constructor to create a Pair.");
     }
-    public Pair(
+    private Pair(
         Rank pairRank,
         Rank highestKickerRank,
         Rank middleKickerRank,

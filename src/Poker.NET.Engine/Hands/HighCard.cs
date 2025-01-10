@@ -15,7 +15,7 @@ public readonly struct HighCard : IHand<HighCard>
     {
         throw new InvalidOperationException("You must not use the default constructor to create a HighCard.");
     }
-    public HighCard(
+    private HighCard(
         Rank highestRank,
         Rank secondRank,
         Rank thirdRank,

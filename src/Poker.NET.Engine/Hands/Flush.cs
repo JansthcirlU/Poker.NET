@@ -15,7 +15,7 @@ public readonly struct Flush : IHand<Flush>
     {
         throw new InvalidOperationException("You must not use the default constructor to create a Flush.");
     }
-    public Flush(
+    private Flush(
         Rank highestRank,
         Rank secondRank,
         Rank thirdRank,

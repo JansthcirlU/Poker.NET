@@ -13,7 +13,7 @@ public readonly struct TwoPair : IHand<TwoPair>
     {
         throw new InvalidOperationException("You must not use the default constructor to create a TwoPair.");
     }
-    public TwoPair(
+    private TwoPair(
         Rank highestPairRank,
         Rank lowestPairRank,
         Rank kickerRank)
