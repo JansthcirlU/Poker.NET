@@ -31,6 +31,7 @@ public readonly struct FourOfAKind : IHand<FourOfAKind>
         Rank fourOfAKindRank = HandScoreHelper.GetFourOfAKindRank(fourOfAKind);
         Rank kickerRank = (cards & ~fourOfAKind).GetIndividualCards()
             .Select(c => c.GetRank())
+            .OrderByDescending(r => r)
             .First();
         return new(fourOfAKindRank, kickerRank);
     }
