@@ -32,9 +32,27 @@ public readonly struct HighCard : IHand<HighCard>
     public static HighCard FromHand(HoldemHand hand)
     {
         Cards cards = hand.HoleCards | hand.CommunityCards;
-        List<Rank> ranks = cards
-            .GetIndividualCards()
-            .Select(c => c.GetRank())
+        Dictionary<Rank, Cards> cardsByRank = cards.ToRankDictionary();
+        if (cardsByRank.Any(kvp => kvp.Value.GetCardCount() > 1)) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain a high card.");
+        
+        Dictionary<Suit, Cards> cardsBySuit = cards.ToSuitDictionary();
+        if (cardsBySuit.Any(kvp => kvp.Value.GetCardCount() >= 5)) throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain a high card.");
+
+        List<Rank> sortedRanks = cardsByRank.Keys.OrderBy(r => r).ToList();
+        if (sortedRanks.Contains(Rank.AceHigh)) sortedRanks.Insert(0, Rank.AceLow);
+        for (int i = 0; i <= sortedRanks.Count - 5; i++)
+        {
+            if (sortedRanks[i] + 1 == sortedRanks[i + 1] &&
+                sortedRanks[i] + 2 == sortedRanks[i + 2] &&
+                sortedRanks[i] + 3 == sortedRanks[i + 3] &&
+                sortedRanks[i] + 4 == sortedRanks[i + 4])
+            {
+                throw new ArgumentException($"The hold'em hand {cards.ToCardString()} does not contain a high card.");
+            }
+        }
+        
+        List<Rank> ranks = cardsByRank
+            .Select(c => c.Key)
             .OrderByDescending(r => r)
             .Take(5)
             .ToList();
