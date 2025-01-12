@@ -1,7 +1,6 @@
 namespace Poker.NET.Engine;
 
-[Flags]
-public enum Suits : byte
+public enum Suit : byte
 {
     None,
     Clubs,

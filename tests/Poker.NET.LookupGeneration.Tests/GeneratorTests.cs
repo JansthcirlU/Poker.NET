@@ -1,24 +1,84 @@
+using System.Numerics;
 using Poker.NET.Engine;
-using Poker.NET.LookupGeneration.Tests.Helpers;
+using Poker.NET.Engine.Helpers;
 
 namespace Poker.NET.LookupGeneration.Tests;
 
 public class GeneratorTests
 {
-    public static TheoryData<Cards> AllPairs => [.. HandsGenerator.GetAllPairs()];
-    public static TheoryData<Cards> AllTwoPairs => [.. HandsGenerator.GetAllTwoPairs()];
-    public static TheoryData<Cards> AllThreeOfAKind => [.. HandsGenerator.GetAllThreeOfAKind()];
-    public static TheoryData<Cards> AllStraights => [.. HandsGenerator.GetAllStraights()];
-    public static TheoryData<Cards> AllFlushes => [.. HandsGenerator.GetAllFlushes()];
-    public static TheoryData<Cards> AllFullHouse => [.. HandsGenerator.GetAllFullHouse()];
-    public static TheoryData<Cards> AllFourOfAKind => [.. HandsGenerator.GetAllFourOfAKind()];
-    public static TheoryData<Cards> AllStraightFlushes => [.. HandsGenerator.GetAllStraightFlushes()];
+    public static readonly TheoryData<Cards> AllPairs = [.. HandsGenerator.GetAllPairs()];
+    public static readonly TheoryData<Cards> AllTwoPairs = [.. HandsGenerator.GetAllTwoPairs()];
+    public static readonly TheoryData<Cards> AllThreeOfAKind = [.. HandsGenerator.GetAllThreeOfAKind()];
+    public static readonly TheoryData<Cards> AllStraights = [.. HandsGenerator.GetAllStraights()];
+    public static readonly TheoryData<Cards> AllFlushes = [.. HandsGenerator.GetAllFlushes()];
+    public static readonly TheoryData<Cards> AllFullHouse = [.. HandsGenerator.GetAllFullHouse()];
+    public static readonly TheoryData<Cards> AllFourOfAKind = [.. HandsGenerator.GetAllFourOfAKind()];
+    public static readonly TheoryData<Cards> AllStraightFlushes = [.. HandsGenerator.GetAllStraightFlushes()];
+    public static readonly TheoryData<byte> UnacceptableKValues = [.. Enumerable.Range(0, 255).Except(Enumerable.Range(1, 52)).Select(i => (byte)i)];
+
+    [Fact]
+    public void GospersHack_WhenGivenZero_ShouldThrow()
+    {
+        // Act
+        ArgumentOutOfRangeException? ex = Assert.Throws<ArgumentOutOfRangeException>(
+            () => HandsGenerator.Gosper(0)
+        );
+
+        // Assert
+        Assert.NotNull(ex);
+        Assert.StartsWith("hand ('0') must not be equal to '0'.", ex.Message);
+    }
+
+    [Fact]
+    public void GospersHack_WhenGivenMinimumUnshiftableValue_ShouldThrow()
+    {
+        // Act
+        ArgumentOutOfRangeException? ex = Assert.Throws<ArgumentOutOfRangeException>(
+            () => HandsGenerator.Gosper(ulong.MaxValue - 1)
+        );
+
+        // Assert
+        Assert.NotNull(ex);
+        Assert.StartsWith("hand ('18446744073709551614') must be less than or equal to '18446744073709551613'.", ex.Message);
+    }
+
+    [Theory]
+    [InlineData(0b01, 0b10)]
+    [InlineData(0b011, 0b101)]
+    [InlineData(0b10101, 0b10110)]
+    public void GospersHackSanityChecks(ulong hand, ulong expected)
+    {
+        // Act
+        ulong actual = HandsGenerator.Gosper(hand);
+
+        // Assert
+        Assert.True(actual > hand);
+        int handBitsSet = BitOperations.PopCount(hand);
+        int actualBitsSet = BitOperations.PopCount(actual);
+        Assert.Equal(handBitsSet, actualBitsSet);
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [MemberData(nameof(UnacceptableKValues))]
+    public void GetAllKCardHands_WhenKInUnacceptableRange_ShouldThrow(byte k)
+    {
+        // Act
+        ArgumentOutOfRangeException? ex = Assert.Throws<ArgumentOutOfRangeException>(
+            () => HandsGenerator.GetAllKCardHands(k).ToList()
+        );
+
+        // Assert
+        Assert.NotNull(ex);
+        Assert.Equal("k", ex.ParamName);
+        Assert.StartsWith("k must be between 1 and 52 (inclusive).", ex.Message);
+    }
 
     [Fact]
     public void SanityCheck()
     {
         // Arrange
-        int allSevenCardHandsCount = HandsGenerator.GetAllSevenCardHands().Count();
+        int allSevenCardHandsCount = HandsGenerator.GetAllKCardHands(7).Count();
 
         // Assert
         Assert.Equal(Combinatorics.SevenCardHandsCount, allSevenCardHandsCount);
@@ -152,16 +212,16 @@ public class GeneratorTests
         Assert.Equal(5, straight.GetCardCount());
         Assert.False(straight.AreTheSameSuit()); // Must not be straight flush
 
-        bool isFiveHigh = straight.ContainsRanks(Ranks.Fives, Ranks.Fours, Ranks.Threes, Ranks.Twos, Ranks.Aces);
-        bool isSixHigh = straight.ContainsRanks(Ranks.Sixes, Ranks.Fives, Ranks.Fours, Ranks.Threes, Ranks.Twos);
-        bool isSevenHigh = straight.ContainsRanks(Ranks.Sevens, Ranks.Sixes, Ranks.Fives, Ranks.Fours, Ranks.Threes);
-        bool isEightHigh = straight.ContainsRanks(Ranks.Eights, Ranks.Sevens, Ranks.Sixes, Ranks.Fives, Ranks.Fours);
-        bool isNineHigh = straight.ContainsRanks(Ranks.Nines, Ranks.Eights, Ranks.Sevens, Ranks.Sixes, Ranks.Fives);
-        bool isTenHigh = straight.ContainsRanks(Ranks.Tens, Ranks.Nines, Ranks.Eights, Ranks.Sevens, Ranks.Sixes);
-        bool isJackHigh = straight.ContainsRanks(Ranks.Jacks, Ranks.Tens, Ranks.Nines, Ranks.Eights, Ranks.Sevens);
-        bool isQueenHigh = straight.ContainsRanks(Ranks.Queens, Ranks.Jacks, Ranks.Tens, Ranks.Nines, Ranks.Eights);
-        bool isKingHigh = straight.ContainsRanks(Ranks.Kings, Ranks.Queens, Ranks.Jacks, Ranks.Tens, Ranks.Nines);
-        bool isAceHigh = straight.ContainsRanks(Ranks.Aces, Ranks.Kings, Ranks.Queens, Ranks.Jacks, Ranks.Tens);
+        bool isFiveHigh = straight.ContainsRanks(Rank.Five, Rank.Four, Rank.Three, Rank.Two, Rank.AceHigh);
+        bool isSixHigh = straight.ContainsRanks(Rank.Six, Rank.Five, Rank.Four, Rank.Three, Rank.Two);
+        bool isSevenHigh = straight.ContainsRanks(Rank.Seven, Rank.Six, Rank.Five, Rank.Four, Rank.Three);
+        bool isEightHigh = straight.ContainsRanks(Rank.Eight, Rank.Seven, Rank.Six, Rank.Five, Rank.Four);
+        bool isNineHigh = straight.ContainsRanks(Rank.Nine, Rank.Eight, Rank.Seven, Rank.Six, Rank.Five);
+        bool isTenHigh = straight.ContainsRanks(Rank.Ten, Rank.Nine, Rank.Eight, Rank.Seven, Rank.Six);
+        bool isJackHigh = straight.ContainsRanks(Rank.Jack, Rank.Ten, Rank.Nine, Rank.Eight, Rank.Seven);
+        bool isQueenHigh = straight.ContainsRanks(Rank.Queen, Rank.Jack, Rank.Ten, Rank.Nine, Rank.Eight);
+        bool isKingHigh = straight.ContainsRanks(Rank.King, Rank.Queen, Rank.Jack, Rank.Ten, Rank.Nine);
+        bool isAceHigh = straight.ContainsRanks(Rank.AceHigh, Rank.King, Rank.Queen, Rank.Jack, Rank.Ten);
         Assert.True(
             isFiveHigh ||
             isSixHigh ||
@@ -271,16 +331,16 @@ public class GeneratorTests
         Assert.Equal(5, straightFlush.GetCardCount());
         Assert.True(straightFlush.AreTheSameSuit());
 
-        bool isFiveHigh = straightFlush.ContainsRanks(Ranks.Fives, Ranks.Fours, Ranks.Threes, Ranks.Twos, Ranks.Aces);
-        bool isSixHigh = straightFlush.ContainsRanks(Ranks.Sixes, Ranks.Fives, Ranks.Fours, Ranks.Threes, Ranks.Twos);
-        bool isSevenHigh = straightFlush.ContainsRanks(Ranks.Sevens, Ranks.Sixes, Ranks.Fives, Ranks.Fours, Ranks.Threes);
-        bool isEightHigh = straightFlush.ContainsRanks(Ranks.Eights, Ranks.Sevens, Ranks.Sixes, Ranks.Fives, Ranks.Fours);
-        bool isNineHigh = straightFlush.ContainsRanks(Ranks.Nines, Ranks.Eights, Ranks.Sevens, Ranks.Sixes, Ranks.Fives);
-        bool isTenHigh = straightFlush.ContainsRanks(Ranks.Tens, Ranks.Nines, Ranks.Eights, Ranks.Sevens, Ranks.Sixes);
-        bool isJackHigh = straightFlush.ContainsRanks(Ranks.Jacks, Ranks.Tens, Ranks.Nines, Ranks.Eights, Ranks.Sevens);
-        bool isQueenHigh = straightFlush.ContainsRanks(Ranks.Queens, Ranks.Jacks, Ranks.Tens, Ranks.Nines, Ranks.Eights);
-        bool isKingHigh = straightFlush.ContainsRanks(Ranks.Kings, Ranks.Queens, Ranks.Jacks, Ranks.Tens, Ranks.Nines);
-        bool isAceHigh = straightFlush.ContainsRanks(Ranks.Aces, Ranks.Kings, Ranks.Queens, Ranks.Jacks, Ranks.Tens);
+        bool isFiveHigh = straightFlush.ContainsRanks(Rank.Five, Rank.Four, Rank.Three, Rank.Two, Rank.AceHigh);
+        bool isSixHigh = straightFlush.ContainsRanks(Rank.Six, Rank.Five, Rank.Four, Rank.Three, Rank.Two);
+        bool isSevenHigh = straightFlush.ContainsRanks(Rank.Seven, Rank.Six, Rank.Five, Rank.Four, Rank.Three);
+        bool isEightHigh = straightFlush.ContainsRanks(Rank.Eight, Rank.Seven, Rank.Six, Rank.Five, Rank.Four);
+        bool isNineHigh = straightFlush.ContainsRanks(Rank.Nine, Rank.Eight, Rank.Seven, Rank.Six, Rank.Five);
+        bool isTenHigh = straightFlush.ContainsRanks(Rank.Ten, Rank.Nine, Rank.Eight, Rank.Seven, Rank.Six);
+        bool isJackHigh = straightFlush.ContainsRanks(Rank.Jack, Rank.Ten, Rank.Nine, Rank.Eight, Rank.Seven);
+        bool isQueenHigh = straightFlush.ContainsRanks(Rank.Queen, Rank.Jack, Rank.Ten, Rank.Nine, Rank.Eight);
+        bool isKingHigh = straightFlush.ContainsRanks(Rank.King, Rank.Queen, Rank.Jack, Rank.Ten, Rank.Nine);
+        bool isAceHigh = straightFlush.ContainsRanks(Rank.AceHigh, Rank.King, Rank.Queen, Rank.Jack, Rank.Ten);
         Assert.True(
             isFiveHigh ||
             isSixHigh ||

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Poker.NET.Engine\Poker.NET.Engine.csproj" />
+    <ProjectReference Include="..\..\src\Poker.NET.LookupGeneration\Poker.NET.LookupGeneration.csproj" />
   </ItemGroup>
 
   <ItemGroup>
