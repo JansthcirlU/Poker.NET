@@ -87,4 +87,64 @@ public class ThreeOfAKindTests : HandsTests
         Assert.NotNull(ex);
         Assert.StartsWith($"The hold'em hand {hand} does not contain exactly one three of a kind.", ex.Message);
     }
+
+    [Theory]
+    [InlineData(
+        Cards.FourOfClubs | Cards.TenOfClubs,
+        Cards.FourOfDiamonds | Cards.NineOfHearts,
+        Cards.FourOfSpades | Cards.FourOfHearts | Cards.FiveOfClubs | Cards.SixOfDiamonds | Cards.EightOfSpades)]
+    public override void CompareTo_WhenFirstBeatsSecond_ShouldBeGreaterThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        ThreeOfAKind firstThreeOfAKind = ThreeOfAKind.FromHand(firstHand);
+        ThreeOfAKind secondThreeOfAKind = ThreeOfAKind.FromHand(secondHand);
+
+        // Act
+        int comparison = firstThreeOfAKind.CompareTo(secondThreeOfAKind);
+
+        // Assert
+        Assert.True(comparison > 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.FourOfDiamonds | Cards.NineOfHearts,
+        Cards.FourOfClubs | Cards.TenOfClubs,
+        Cards.FourOfSpades | Cards.FourOfHearts | Cards.FiveOfClubs | Cards.SixOfDiamonds | Cards.EightOfSpades)]
+    public override void CompareTo_WhenFirstLosesToSecond_ShouldBeLessThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        ThreeOfAKind firstThreeOfAKind = ThreeOfAKind.FromHand(firstHand);
+        ThreeOfAKind secondThreeOfAKind = ThreeOfAKind.FromHand(secondHand);
+
+        // Act
+        int comparison = firstThreeOfAKind.CompareTo(secondThreeOfAKind);
+
+        // Assert
+        Assert.True(comparison < 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.FourOfClubs | Cards.TwoOfDiamonds,
+        Cards.FourOfDiamonds | Cards.TwoOfHearts,
+        Cards.FourOfSpades | Cards.FourOfHearts | Cards.FiveOfClubs | Cards.SixOfDiamonds | Cards.EightOfSpades)]
+    public override void CompareTo_WhenFirstDrawsWithSecond_ShouldBeEqualToZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        ThreeOfAKind firstThreeOfAKind = ThreeOfAKind.FromHand(firstHand);
+        ThreeOfAKind secondThreeOfAKind = ThreeOfAKind.FromHand(secondHand);
+
+        // Act
+        int comparison = firstThreeOfAKind.CompareTo(secondThreeOfAKind);
+
+        // Assert
+        Assert.Equal(0, comparison);
+    }
 }

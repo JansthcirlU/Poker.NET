@@ -78,4 +78,73 @@ public class FourOfAKindTests : HandsTests
         Assert.NotNull(ex);
         Assert.StartsWith($"The hold'em hand {hand} does not contain a four of a kind.", ex.Message);
     }
+
+    [Theory]
+    [InlineData(
+        Cards.FourOfClubs | Cards.FourOfDiamonds,
+        Cards.TwoOfClubs | Cards.TwoOfDiamonds,
+        Cards.FourOfHearts | Cards.FourOfSpades | Cards.TwoOfHearts | Cards.TwoOfSpades | Cards.AceOfSpades)]
+    public override void CompareTo_WhenFirstBeatsSecond_ShouldBeGreaterThanZero(
+        Cards firstHoleCards,
+        Cards secondHoleCards,
+        Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        FourOfAKind firstFourOfAKind = FourOfAKind.FromHand(firstHand);
+        FourOfAKind secondFourOfAKind = FourOfAKind.FromHand(secondHand);
+
+        // Act
+        int comparison = firstFourOfAKind.CompareTo(secondFourOfAKind);
+
+        // Assert
+        Assert.True(comparison > 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.TwoOfClubs | Cards.TwoOfDiamonds,
+        Cards.FourOfClubs | Cards.FourOfDiamonds,
+        Cards.FourOfHearts | Cards.FourOfSpades | Cards.TwoOfHearts | Cards.TwoOfSpades | Cards.AceOfSpades)]
+    public override void CompareTo_WhenFirstLosesToSecond_ShouldBeLessThanZero(
+        Cards firstHoleCards,
+        Cards secondHoleCards,
+        Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        FourOfAKind firstFourOfAKind = FourOfAKind.FromHand(firstHand);
+        FourOfAKind secondFourOfAKind = FourOfAKind.FromHand(secondHand);
+
+        // Act
+        int comparison = firstFourOfAKind.CompareTo(secondFourOfAKind);
+
+        // Assert
+        Assert.True(comparison < 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.KingOfClubs | Cards.AceOfClubs,
+        Cards.SevenOfDiamonds | Cards.KingOfHearts,
+        Cards.TwoOfHearts | Cards.TwoOfSpades | Cards.TwoOfClubs | Cards.TwoOfDiamonds | Cards.AceOfSpades)]
+    public override void CompareTo_WhenFirstDrawsWithSecond_ShouldBeEqualToZero(
+        Cards firstHoleCards,
+        Cards secondHoleCards,
+        Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        FourOfAKind firstFourOfAKind = FourOfAKind.FromHand(firstHand);
+        FourOfAKind secondFourOfAKind = FourOfAKind.FromHand(secondHand);
+
+        // Act
+        int comparison = firstFourOfAKind.CompareTo(secondFourOfAKind);
+
+        // Assert
+        Assert.Equal(0, comparison);
+    }
 }

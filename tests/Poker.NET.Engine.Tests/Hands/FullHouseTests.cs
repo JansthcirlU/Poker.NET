@@ -78,4 +78,64 @@ public class FullHouseTests : HandsTests
         Assert.NotNull(ex);
         Assert.StartsWith($"The hold'em hand {hand} does not contain any full houses.", ex.Message);
     }
+
+    [Theory]
+    [InlineData(
+        Cards.ThreeOfClubs | Cards.ThreeOfDiamonds,
+        Cards.TwoOfHearts | Cards.ThreeOfHearts,
+        Cards.ThreeOfSpades | Cards.TwoOfSpades | Cards.TwoOfClubs | Cards.KingOfHearts | Cards.AceOfSpades)]
+    public override void CompareTo_WhenFirstBeatsSecond_ShouldBeGreaterThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        FullHouse firstFullHouse = FullHouse.FromHand(firstHand);
+        FullHouse secondFullHouse = FullHouse.FromHand(secondHand);
+
+        // Act
+        int comparison = firstFullHouse.CompareTo(secondFullHouse);
+
+        // Assert
+        Assert.True(comparison > 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.TwoOfHearts | Cards.ThreeOfHearts,
+        Cards.ThreeOfClubs | Cards.ThreeOfDiamonds,
+        Cards.ThreeOfSpades | Cards.TwoOfSpades | Cards.TwoOfClubs | Cards.KingOfHearts | Cards.AceOfSpades)]
+    public override void CompareTo_WhenFirstLosesToSecond_ShouldBeLessThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        FullHouse firstFullHouse = FullHouse.FromHand(firstHand);
+        FullHouse secondFullHouse = FullHouse.FromHand(secondHand);
+
+        // Act
+        int comparison = firstFullHouse.CompareTo(secondFullHouse);
+
+        // Assert
+        Assert.True(comparison < 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.AceOfClubs | Cards.KingOfDiamonds,
+        Cards.AceOfDiamonds | Cards.KingOfClubs,
+        Cards.TwoOfClubs | Cards.TwoOfDiamonds | Cards.TwoOfHearts | Cards.ThreeOfHearts | Cards.ThreeOfDiamonds)]
+    public override void CompareTo_WhenFirstDrawsWithSecond_ShouldBeEqualToZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        FullHouse firstFullHouse = FullHouse.FromHand(firstHand);
+        FullHouse secondFullHouse = FullHouse.FromHand(secondHand);
+
+        // Act
+        int comparison = firstFullHouse.CompareTo(secondFullHouse);
+
+        // Assert
+        Assert.Equal(0, comparison);
+    }
 }

@@ -75,4 +75,64 @@ public class StraightTests : HandsTests
         Assert.NotNull(ex);
         Assert.StartsWith($"The hold'em hand {hand} does not contain any straights.", ex.Message);
     }
+
+    [Theory]
+    [InlineData(
+        Cards.SixOfSpades | Cards.SevenOfDiamonds,
+        Cards.AceOfDiamonds | Cards.TwoOfDiamonds,
+        Cards.ThreeOfDiamonds | Cards.FourOfHearts | Cards.FiveOfDiamonds | Cards.QueenOfClubs | Cards.KingOfHearts)]
+    public override void CompareTo_WhenFirstBeatsSecond_ShouldBeGreaterThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        Straight firstStraight = Straight.FromHand(firstHand);
+        Straight secondStraight = Straight.FromHand(secondHand);
+
+        // Act
+        int comparison = firstStraight.CompareTo(secondStraight);
+
+        // Assert
+        Assert.True(comparison > 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.AceOfDiamonds | Cards.TwoOfDiamonds,
+        Cards.SixOfSpades | Cards.SevenOfDiamonds,
+        Cards.ThreeOfDiamonds | Cards.FourOfHearts | Cards.FiveOfDiamonds | Cards.QueenOfClubs | Cards.KingOfHearts)]
+    public override void CompareTo_WhenFirstLosesToSecond_ShouldBeLessThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        Straight firstStraight = Straight.FromHand(firstHand);
+        Straight secondStraight = Straight.FromHand(secondHand);
+
+        // Act
+        int comparison = firstStraight.CompareTo(secondStraight);
+
+        // Assert
+        Assert.True(comparison < 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.TwoOfClubs | Cards.JackOfHearts,
+        Cards.KingOfSpades | Cards.QueenOfSpades,
+        Cards.TenOfHearts | Cards.JackOfDiamonds | Cards.QueenOfDiamonds | Cards.KingOfClubs | Cards.AceOfSpades)]
+    public override void CompareTo_WhenFirstDrawsWithSecond_ShouldBeEqualToZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        Straight firstStraight = Straight.FromHand(firstHand);
+        Straight secondStraight = Straight.FromHand(secondHand);
+
+        // Act
+        int comparison = firstStraight.CompareTo(secondStraight);
+
+        // Assert
+        Assert.Equal(0, comparison);
+    }
 }

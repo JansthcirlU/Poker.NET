@@ -87,4 +87,68 @@ public class HighCardTests : HandsTests
         Assert.NotNull(ex);
         Assert.StartsWith($"The hold'em hand {hand} does not contain a high card.", ex.Message);
     }
+
+    [Theory]
+    [InlineData(
+        Cards.TwoOfDiamonds | Cards.QueenOfSpades,
+        Cards.TenOfClubs | Cards.JackOfDiamonds,
+        Cards.ThreeOfHearts | Cards.FiveOfClubs | Cards.SixOfSpades | Cards.SevenOfDiamonds | Cards.NineOfHearts)]
+    public override void CompareTo_WhenFirstBeatsSecond_ShouldBeGreaterThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        HighCard firstHighCard = HighCard.FromHand(firstHand);
+        HighCard secondHighCard = HighCard.FromHand(secondHand);
+
+        // Act
+        int comparison = firstHighCard.CompareTo(secondHighCard);
+
+        // Assert
+        Assert.True(comparison > 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.TenOfClubs | Cards.JackOfDiamonds,
+        Cards.TwoOfDiamonds | Cards.QueenOfSpades,
+        Cards.ThreeOfHearts | Cards.FiveOfClubs | Cards.SixOfSpades | Cards.SevenOfDiamonds | Cards.NineOfHearts)]
+    public override void CompareTo_WhenFirstLosesToSecond_ShouldBeLessThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        HighCard firstHighCard = HighCard.FromHand(firstHand);
+        HighCard secondHighCard = HighCard.FromHand(secondHand);
+
+        // Act
+        int comparison = firstHighCard.CompareTo(secondHighCard);
+
+        // Assert
+        Assert.True(comparison < 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.TwoOfDiamonds | Cards.QueenOfSpades,
+        Cards.TwoOfClubs | Cards.QueenOfHearts,
+        Cards.ThreeOfHearts | Cards.FiveOfClubs | Cards.SixOfSpades | Cards.SevenOfDiamonds | Cards.NineOfHearts)]
+    [InlineData(
+        Cards.TwoOfDiamonds | Cards.ThreeOfSpades,
+        Cards.FourOfHearts | Cards.SevenOfDiamonds,
+        Cards.EightOfClubs | Cards.NineOfDiamonds | Cards.TenOfHearts | Cards.KingOfSpades | Cards.AceOfSpades)]
+    public override void CompareTo_WhenFirstDrawsWithSecond_ShouldBeEqualToZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        HighCard firstHighCard = HighCard.FromHand(firstHand);
+        HighCard secondHighCard = HighCard.FromHand(secondHand);
+
+        // Act
+        int comparison = firstHighCard.CompareTo(secondHighCard);
+
+        // Assert
+        Assert.Equal(0, comparison);
+    }
 }

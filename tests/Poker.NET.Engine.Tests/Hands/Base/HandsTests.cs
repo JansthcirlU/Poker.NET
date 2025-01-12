@@ -38,4 +38,8 @@ public abstract class HandsTests
         Cards.ThreeOfClubs | Cards.AceOfClubs,
         Cards.TwoOfClubs | Cards.FourOfClubs | Cards.FiveOfClubs | Cards.EightOfHearts | Cards.TenOfSpades
     ];
+
+    public abstract void CompareTo_WhenFirstBeatsSecond_ShouldBeGreaterThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards);
+    public abstract void CompareTo_WhenFirstLosesToSecond_ShouldBeLessThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards);
+    public abstract void CompareTo_WhenFirstDrawsWithSecond_ShouldBeEqualToZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards);
 }

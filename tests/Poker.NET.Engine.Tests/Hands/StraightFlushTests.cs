@@ -79,4 +79,64 @@ public class StraightFlushTests : HandsTests
         Assert.NotNull(ex);
         Assert.StartsWith($"The hold'em hand {hand} does not contain a straight flush.", ex.Message);
     }
+
+    [Theory]
+    [InlineData(
+        Cards.SixOfDiamonds | Cards.SevenOfDiamonds,
+        Cards.AceOfDiamonds | Cards.TwoOfDiamonds,
+        Cards.ThreeOfDiamonds | Cards.FourOfDiamonds | Cards.FiveOfDiamonds | Cards.QueenOfClubs | Cards.KingOfHearts)]
+    public override void CompareTo_WhenFirstBeatsSecond_ShouldBeGreaterThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        StraightFlush firstStraightFlush = StraightFlush.FromHand(firstHand);
+        StraightFlush secondStraightFlush = StraightFlush.FromHand(secondHand);
+
+        // Act
+        int comparison = firstStraightFlush.CompareTo(secondStraightFlush);
+
+        // Assert
+        Assert.True(comparison > 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.AceOfDiamonds | Cards.TwoOfDiamonds,
+        Cards.SixOfDiamonds | Cards.SevenOfDiamonds,
+        Cards.ThreeOfDiamonds | Cards.FourOfDiamonds | Cards.FiveOfDiamonds | Cards.QueenOfClubs | Cards.KingOfHearts)]
+    public override void CompareTo_WhenFirstLosesToSecond_ShouldBeLessThanZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        StraightFlush firstStraightFlush = StraightFlush.FromHand(firstHand);
+        StraightFlush secondStraightFlush = StraightFlush.FromHand(secondHand);
+
+        // Act
+        int comparison = firstStraightFlush.CompareTo(secondStraightFlush);
+
+        // Assert
+        Assert.True(comparison < 0);
+    }
+
+    [Theory]
+    [InlineData(
+        Cards.TwoOfClubs | Cards.KingOfSpades,
+        Cards.AceOfSpades | Cards.QueenOfSpades,
+        Cards.TenOfDiamonds | Cards.JackOfDiamonds | Cards.QueenOfDiamonds | Cards.KingOfDiamonds | Cards.AceOfDiamonds)]
+    public override void CompareTo_WhenFirstDrawsWithSecond_ShouldBeEqualToZero(Cards firstHoleCards, Cards secondHoleCards, Cards communityCards)
+    {
+        // Arrange
+        HoldemHand firstHand = new(firstHoleCards, communityCards);
+        HoldemHand secondHand = new(secondHoleCards, communityCards);
+        StraightFlush firstStraightFlush = StraightFlush.FromHand(firstHand);
+        StraightFlush secondStraightFlush = StraightFlush.FromHand(secondHand);
+
+        // Act
+        int comparison = firstStraightFlush.CompareTo(secondStraightFlush);
+
+        // Assert
+        Assert.Equal(0, comparison);
+    }
 }
