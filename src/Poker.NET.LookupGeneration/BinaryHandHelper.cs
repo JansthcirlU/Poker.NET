@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using Poker.NET.Engine;
 
 namespace Poker.NET.LookupGeneration;
@@ -11,18 +12,18 @@ public static class BinaryHandHelper
     const ulong HoleCardMask        = 0b_0000_0000_0000_0000_0000_0000_0000_0001_1111_1111_1100_0000_0000_0000_0000_0000;
     const ulong CommunityCardMask   = 0b_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0011_1111_1111_1111_1111_1111;
 
-    public static readonly Dictionary<Cards, ushort> HoleCardIndices
+    private static readonly FrozenDictionary<Cards, ushort> HoleCardIndices
         = HandsGenerator.GetAllKCardHands(2)
             .Select((cards, index) => (cards, index))
-            .ToDictionary(x => x.cards, x => (ushort)x.index);
-    public static readonly Dictionary<ushort, Cards> HoleCardsIndicesReversed
-        = HoleCardIndices.ToDictionary(kvp => kvp.Value, x => x.Key);
-    public static readonly Dictionary<Cards, uint> CommunityCardIndices
+            .ToFrozenDictionary(x => x.cards, x => (ushort)x.index);
+    private static readonly FrozenDictionary<ushort, Cards> HoleCardsIndicesReversed
+        = HoleCardIndices.ToFrozenDictionary(kvp => kvp.Value, x => x.Key);
+    private static readonly FrozenDictionary<Cards, uint> CommunityCardIndices
         = HandsGenerator.GetAllKCardHands(5)
             .Select((cards, index) => (cards, index))
-            .ToDictionary(x => x.cards, x => (uint)x.index);
-    public static readonly Dictionary<uint, Cards> CommunityCardsIndicesReversed
-        = CommunityCardIndices.ToDictionary(kvp => kvp.Value, x => x.Key);
+            .ToFrozenDictionary(x => x.cards, x => (uint)x.index);
+    private static readonly FrozenDictionary<uint, Cards> CommunityCardsIndicesReversed
+        = CommunityCardIndices.ToFrozenDictionary(kvp => kvp.Value, x => x.Key);
 
     public static byte[] Pack(HoldemHand hand, uint score)
     {
