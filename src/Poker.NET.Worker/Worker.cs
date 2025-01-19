@@ -27,11 +27,20 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // If more than three checkpoint directories exist, delete the oldest one
+        // If more than three non-empty checkpoint directories exist, delete the oldest one
         string checkpointsPath = _configuration["CheckpointsPath"]!;
         string[] directories = Directory.Exists(checkpointsPath)
-            ? [.. Directory.GetDirectories(checkpointsPath).OrderByDescending(d => d)]
-            : [];
+            ? [..
+                Directory.GetDirectories(checkpointsPath)
+                    .Where(d => Directory.EnumerateFiles(d, "*.bin").Any())
+                    .OrderByDescending(d => d)
+            ] : [];
+        string[] emptyDirectories = [.. directories.Where(d => !Directory.EnumerateFiles(d, "*.bin").Any())];
+        foreach (string emptyDirectory in emptyDirectories)
+        {
+            Directory.Delete(emptyDirectory, true);
+            _logger.LogInformation("Deleted empty checkpoint directory {EmptyDirectory}.", emptyDirectory);
+        }
         if (directories.Length > 2)
         {
             string oldestDirectory = directories.Last();
