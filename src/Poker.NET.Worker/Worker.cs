@@ -1,6 +1,7 @@
 using Poker.NET.Engine;
 using Poker.NET.LookupGeneration;
 using Poker.NET.LookupGeneration.Data;
+using Poker.NET.LookupGeneration.Extensions;
 using Poker.NET.Worker.Helpers;
 
 namespace Poker.NET.Worker;
@@ -27,71 +28,79 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // If more than three non-empty checkpoint directories exist, delete the oldest one
         string checkpointsPath = _configuration["CheckpointsPath"]!;
-        string[] directories = Directory.Exists(checkpointsPath)
-            ? [..
-                Directory.GetDirectories(checkpointsPath)
-                    .Where(d => Directory.EnumerateFiles(d, "*.bin").Any())
-                    .OrderByDescending(d => d)
-            ] : [];
-        string[] emptyDirectories = [.. directories.Where(d => !Directory.EnumerateFiles(d, "*.bin").Any())];
-        foreach (string emptyDirectory in emptyDirectories)
+        if (!Directory.Exists(checkpointsPath))
         {
-            Directory.Delete(emptyDirectory, true);
-            _logger.LogInformation("Deleted empty checkpoint directory {EmptyDirectory}.", emptyDirectory);
-        }
-        if (directories.Length > 2)
-        {
-            string oldestDirectory = directories.Last();
-            Directory.Delete(oldestDirectory, true);
-            _logger.LogInformation("Deleted oldest checkpoint directory {OldestDirectory}.", oldestDirectory);
+            Directory.CreateDirectory(checkpointsPath);
+            _logger.LogInformation("Created missing checkpoints directory at {CheckpointsPath}.", checkpointsPath);
         }
 
-        // Load latest checkpoint directory if it exists
-        string? latestDirectory = directories.FirstOrDefault();
-        if (latestDirectory is not null)
+        _logger.LogInformation("Checking checkpoints directory to load most recent tree.");
+        LinkedList<string> checkpointDirectories = [];
+        foreach (string? directory in Directory.GetDirectories(checkpointsPath)
+                .Where(d => Directory.EnumerateFiles(d, "*.bin").Any())
+                .OrderByDescending(d => d))
         {
-            _logger.LogInformation("Loading latest checkpoint directory {LatestDirectory}.", latestDirectory);
-            _lastTree = await _fileHelper.LoadFromFileAsync(latestDirectory, stoppingToken);
+            if (directory is not null) checkpointDirectories.AddLast(directory);
         }
 
-        // Create checkpoint directory for current run
-        string currentDateTime = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
-        string directoryPath = Path.Combine(checkpointsPath, currentDateTime);
-        Directory.CreateDirectory(directoryPath);
-        _logger.LogInformation("Created checkpoint directory {DirectoryPath}.", directoryPath);
-
-        // Generate hand comparison tree
+        if (checkpointDirectories.LastOrDefault() is string lastDirectoryPath)
+        {
+            _lastTree = await _fileHelper.LoadFromFileAsync(lastDirectoryPath, stoppingToken);
+            _logger.LogInformation("Loaded most recent tree from directory {LastDirectoryPath}.", lastDirectoryPath);
+        }
+        _lastTree ??= []; // In case no tree was loaded
+        
         try
         {
-            int skippable = (int)_lastTree!.Count;
+            int skippable = (int)_lastTree.Count;
             IEnumerable<HoldemHand> allHands = HandsGenerator.GetAllHands().Skip(skippable);
-            _logger.LogInformation("Starting to generate hand comparison tree for all hands.");
-            int chunksProcessed = 0;
-            int chunkSize = 500;
-            foreach (IEnumerable<HoldemHand> chunk in allHands.Chunk(chunkSize))
+            int initialChunkSize = 500;
+            double growthFactor = 0.05;
+            foreach (HoldemHand[] chunk in allHands.ChunkGrowing(initialChunkSize, growthFactor))
             {
-                _logger.LogInformation("Processing hands {ChunkStart} through {ChunkEnd}.", skippable + chunksProcessed * chunkSize, skippable + (chunksProcessed + 1) * chunkSize);
                 foreach (HoldemHand hand in chunk)
                 {
                     _lastTree.Add(hand);
-                    if (stoppingToken.IsCancellationRequested) break;
+                    stoppingToken.ThrowIfCancellationRequested();
                 }
-                _logger.LogInformation("Writing chunk {ChunkNumber} to file.", chunksProcessed);
-                await _fileHelper.WriteToFileAsync(directoryPath, _lastTree, stoppingToken);
+                _logger.LogInformation("Processed chunk of {ChunkLength} hands.", chunk.Length);
+
+                // Save chunk to checkpoint directory
+                string currentDateTime = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+                string directoryPath = Path.Combine(checkpointsPath, currentDateTime);
+                Directory.CreateDirectory(directoryPath);
+                bool success = await _fileHelper.WriteToFileAsync(directoryPath, _lastTree, stoppingToken);
+                _logger.LogInformation("Wrote chunk of {ChunkLength} hands to checkpoint directory at {DirectoryPath}.", chunk.Length, directoryPath);
                 
-                if (stoppingToken.IsCancellationRequested) break;
-                chunksProcessed++;
+                // Rotate checkpoint directories and delete oldest if necessary
+                if (success)
+                {
+                    checkpointDirectories.AddLast(directoryPath);
+                    while (checkpointDirectories.Count > 3)
+                    {
+                        string oldestDirectory = checkpointDirectories.First!.Value;
+                        Directory.Delete(oldestDirectory, true);
+                        checkpointDirectories.RemoveFirst();
+                        _logger.LogInformation("Deleted oldest checkpoint directory {OldestDirectory}.", oldestDirectory);
+                    }
+                }
+
+                stoppingToken.ThrowIfCancellationRequested();
             }
+            _logger.LogInformation("Processed all hands.");
         }
-        catch (Exception)
+        catch (OperationCanceledException opex)
         {
-            _logger.LogCritical("Worker encountered an unhandled exception and will now stop.");
+            _logger.LogError(opex, "Worker was cancelled.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCritical(ex, "Worker encountered an unhandled exception.");
         }
         finally
         {
-            // Write hand comparison tree to file
+            _logger.LogInformation("Worker is stopping.");
             _lifetime.StopApplication();
         }
     }
