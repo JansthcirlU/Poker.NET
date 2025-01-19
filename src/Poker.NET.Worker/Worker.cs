@@ -39,7 +39,7 @@ public class Worker : BackgroundService
         LinkedList<string> checkpointDirectories = [];
         foreach (string? directory in Directory.GetDirectories(checkpointsPath)
                 .Where(d => Directory.EnumerateFiles(d, "*.bin").Any())
-                .OrderByDescending(d => d))
+                .OrderBy(d => d))
         {
             if (directory is not null) checkpointDirectories.AddLast(directory);
         }
@@ -53,8 +53,8 @@ public class Worker : BackgroundService
         
         try
         {
-            int skippable = (int)_lastTree.Count;
-            IEnumerable<HoldemHand> allHands = HandsGenerator.GetAllHands().Skip(skippable);
+            long skippable = _lastTree.Count;
+            IEnumerable<HoldemHand> allHands = HandsGenerator.GetAllHands().SkipLong(skippable);
             int initialChunkSize = 500;
             double growthFactor = 0.05;
             foreach (HoldemHand[] chunk in allHands.ChunkGrowing(initialChunkSize, growthFactor))
