@@ -13,7 +13,7 @@ public class HandComparisonFileHelper : IHandComparisonFileHelper
         _logger = logger;
     }
 
-    public async Task WriteToFileAsync(string directoryPath, HandComparisonTree tree, CancellationToken cancellationToken)
+    public async Task<bool> WriteToFileAsync(string directoryPath, HandComparisonTree tree, CancellationToken cancellationToken)
     {
         uint i = 0;
         ulong saved = 0;
@@ -26,8 +26,6 @@ public class HandComparisonFileHelper : IHandComparisonFileHelper
             foreach (IEnumerable<HoldemHand> bin in tree.Bins)
             {
                 binPath = Path.Combine(directoryPath, $"{i}.bin");
-                _logger.LogInformation("Writing bin {BinNumber} to file {BinPath}.", i, binPath);
-
                 using FileStream stream = new(binPath, FileMode.Create, FileAccess.Write);
                 IEnumerable<byte[]> binBytes = bin.Select(h => BinaryHandHelper.Pack(h, i));
                 foreach (byte[] bytes in binBytes)
@@ -38,12 +36,14 @@ public class HandComparisonFileHelper : IHandComparisonFileHelper
                 i++;
             }
 
-            _logger.LogInformation("Wrote {BinCount} bin(s) and {SavedCount} entries to file {BinPath}.", i, saved, binPath);
+            _logger.LogInformation("Wrote {BinCount} bin(s) and {SavedCount} entries to directory {DirectoryPath}.", i, saved, directoryPath);
+            return true;
         }
         catch (Exception ex)
         {
-            File.Delete(binPath);
-            _logger.LogCritical(ex, "Failed to write whole hand comparison tree to file, only managed to write {BinCount} bin(s) and {SavedCount} entries.", i, saved);
+            Directory.Delete(directoryPath, true);
+            _logger.LogCritical(ex, "Failed to write whole hand comparison tree to file, removing incomplete checkpoint directory.");
+            return false;
         }
     }
 
