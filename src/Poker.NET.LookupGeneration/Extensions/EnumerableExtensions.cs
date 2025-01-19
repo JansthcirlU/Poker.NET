@@ -5,7 +5,7 @@ public static class EnumerableExtensions
     public static IEnumerable<TSource> SkipLong<TSource>(this IEnumerable<TSource> source, long count)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
-        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(count, 0, nameof(count));
+        ArgumentOutOfRangeException.ThrowIfLessThan(count, 0, nameof(count));
 
         long i = 0;
         using IEnumerator<TSource> enumerator = source.GetEnumerator();
