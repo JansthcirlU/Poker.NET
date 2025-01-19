@@ -10,4 +10,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Poker.NET.LookupGeneration\Poker.NET.LookupGeneration.csproj" />
+  </ItemGroup>
 </Project>
