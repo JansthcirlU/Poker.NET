@@ -2,6 +2,24 @@ namespace Poker.NET.LookupGeneration.Extensions;
 
 public static class EnumerableExtensions
 {
+    public static IEnumerable<TSource> SkipLong<TSource>(this IEnumerable<TSource> source, long count)
+    {
+        ArgumentNullException.ThrowIfNull(source, nameof(source));
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(count, 0, nameof(count));
+
+        long i = 0;
+        using IEnumerator<TSource> enumerator = source.GetEnumerator();
+        while (i < count && enumerator.MoveNext())
+        {
+            i++;
+        }
+
+        while (enumerator.MoveNext())
+        {
+            yield return enumerator.Current;
+        }
+    }
+
     public static IEnumerable<TSource[]> ChunkGrowing<TSource>(this IEnumerable<TSource> source, int initialChunkSize, double growthFactor)
     {
         ArgumentNullException.ThrowIfNull(source, nameof(source));
