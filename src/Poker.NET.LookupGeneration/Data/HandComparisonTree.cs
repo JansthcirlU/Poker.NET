@@ -38,6 +38,7 @@ public class HandComparisonTree : IAppendOnlyComparisonCollection<HoldemHand>
             LinkedList<HoldemHand> firstBin = [];
             firstBin.AddLast(item);
             _handBins.Add(firstBin);
+            _count++;
             return;
         }
 
@@ -58,6 +59,7 @@ public class HandComparisonTree : IAppendOnlyComparisonCollection<HoldemHand>
             {
                 // Same strength, add to this bin
                 currentBin.AddLast(item);
+                _count++;
                 return;
             }
 
@@ -77,8 +79,6 @@ public class HandComparisonTree : IAppendOnlyComparisonCollection<HoldemHand>
         LinkedList<HoldemHand> newBin = [];
         newBin.AddLast(item);
         _handBins.Insert(left, newBin);
-
-        // Increase total count
         _count++;
     }
 
