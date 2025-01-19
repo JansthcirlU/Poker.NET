@@ -10,6 +10,7 @@ public class HandComparisonTree : IAppendOnlyComparisonCollection<HoldemHand>
     private readonly List<LinkedList<HoldemHand>> _handBins;
     private readonly NaiveHandEvaluator _evaluator;
     public Func<HoldemHand, HoldemHand, int> Comparer { get; }
+    public IEnumerable<IEnumerable<HoldemHand>> Bins => _handBins;
 
     private HandComparisonTree(List<LinkedList<HoldemHand>> existing)
     {
