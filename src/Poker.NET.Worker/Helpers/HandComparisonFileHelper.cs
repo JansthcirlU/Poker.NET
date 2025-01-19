@@ -53,7 +53,19 @@ public class HandComparisonFileHelper : IHandComparisonFileHelper
         try
         {
             _logger.LogInformation("Loading whole hand comparison tree from directory {DirectoryPath}.", directoryPath);
-            foreach (string file in Directory.EnumerateFiles(directoryPath, "*.bin"))
+            string[] files = [..
+                Directory.EnumerateFiles(directoryPath, "*.bin")
+                    .Select(f => new
+                    {
+                        Path = f,
+                        HasValidIndex = int.TryParse(Path.GetFileNameWithoutExtension(f), out int index),
+                        Index = index
+                    })
+                    .Where(f => f.HasValidIndex)
+                    .OrderBy(f => f.Index)
+                    .Select(f => f.Path)
+                ];
+            foreach (string file in files)
             {
                 LinkedList<HoldemHand> bin = [];
                 using FileStream stream = new(file, FileMode.Open, FileAccess.Read);
