@@ -59,6 +59,7 @@ public class Worker : BackgroundService
             double growthFactor = 0.05;
             foreach (HoldemHand[] chunk in allHands.ChunkGrowing(initialChunkSize, growthFactor))
             {
+                _logger.LogInformation("Processing next chunk...");
                 foreach (HoldemHand hand in chunk)
                 {
                     _lastTree.Add(hand);
@@ -71,7 +72,7 @@ public class Worker : BackgroundService
                 string directoryPath = Path.Combine(checkpointsPath, currentDateTime);
                 Directory.CreateDirectory(directoryPath);
                 bool success = await _fileHelper.WriteToFileAsync(directoryPath, _lastTree, stoppingToken);
-                _logger.LogInformation("Wrote chunk of {ChunkLength} hands to checkpoint directory at {DirectoryPath}.", chunk.Length, directoryPath);
+                _logger.LogInformation("Wrote tree with {BinCount} bins and {HandCount} total hands to checkpoint directory at {DirectoryPath}.", _lastTree.Bins.Count(), _lastTree.Count, directoryPath);
                 
                 // Rotate checkpoint directories and delete oldest if necessary
                 if (success)
