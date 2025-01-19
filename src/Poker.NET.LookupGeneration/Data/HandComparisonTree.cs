@@ -9,14 +9,17 @@ public class HandComparisonTree : IAppendOnlyComparisonCollection<HoldemHand>
 {
     private readonly List<LinkedList<HoldemHand>> _handBins;
     private readonly NaiveHandEvaluator _evaluator;
+    private long _count;
     public Func<HoldemHand, HoldemHand, int> Comparer { get; }
     public IEnumerable<IEnumerable<HoldemHand>> Bins => _handBins;
+    public long Count => _count;
 
     private HandComparisonTree(List<LinkedList<HoldemHand>> existing)
     {
         _handBins = existing;
         _evaluator = new();
         Comparer = (first, second) => _evaluator.Compare(first, second);
+        _count = existing.Aggregate(_count, (total, bin) => total + bin.Count);
     }
     public HandComparisonTree()
     {
@@ -74,6 +77,9 @@ public class HandComparisonTree : IAppendOnlyComparisonCollection<HoldemHand>
         LinkedList<HoldemHand> newBin = [];
         newBin.AddLast(item);
         _handBins.Insert(left, newBin);
+
+        // Increase total count
+        _count++;
     }
 
     public IEnumerator<HoldemHand> GetEnumerator()
